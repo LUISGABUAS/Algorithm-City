@@ -106,9 +106,14 @@ function cloudSectionHtml(){
   if(!cloudEnabled())
     return h+'<p class="cnote">No se pudo conectar con la nube (¿sin internet?). Puedes seguir jugando: tu avance se guarda en este dispositivo.</p>';
   var st=cloudState();
-  if(!st.user)
+  if(!st.user){
+    var provs=(typeof CLOUD_PROVIDERS!=="undefined")?CLOUD_PROVIDERS:["google","github"];
+    var btns="";
+    if(provs.indexOf("google")>=0)btns+='<button class="pbtn" id="cfggoog">🔵 Entrar con Google</button>';
+    if(provs.indexOf("github")>=0)btns+='<button class="pbtn" id="cfggh">⚫ Entrar con GitHub</button>';
     return h+'<p class="cnote">Entra con un clic y tu avance se guardará en la nube, para no perderlo si cambias de dispositivo o de navegador. Es opcional.</p>'
-      +'<div class="trow"><button class="pbtn" id="cfggoog">🔵 Entrar con Google</button><button class="pbtn" id="cfggh">⚫ Entrar con GitHub</button></div>';
+      +'<div class="trow">'+btns+'</div>';
+  }
   var msg=st.status==="sync"?"Sincronizando…":st.status==="err"?"No se pudo sincronizar; lo reintentaré.":"Tu avance se guarda en la nube ✓";
   return h+'<p class="cnote">Sesión iniciada como <b>'+esc(st.email||"tu cuenta")+'</b>. '+msg+'</p>'
     +'<div class="trow"><button class="pbtn mint" id="cfgsync">☁️ Sincronizar ahora</button><button class="pbtn" id="cfgout">Cerrar sesión</button></div>';
@@ -128,6 +133,10 @@ if(typeof save==="function"){ var _cloudSave=save; save=function(){ _cloudSave.a
 /* Arranque: escucha cambios de sesión (restaura al recargar y capta el regreso del OAuth). */
 function cloudInit(){
   var c=cloudClient(); if(!c)return;
+  // Si el proveedor devolvió un error en la URL (p.ej. provider deshabilitado), avisar.
+  try{var hp=(location.hash||"")+(location.search||"");
+      if(/[#&?]error=/.test(hp)){var m=/error_description=([^&]*)/.exec(hp);
+        toast("No se pudo entrar"+(m?": "+decodeURIComponent(m[1].replace(/\+/g," ")):"."));}}catch(e){}
   c.auth.onAuthStateChange(function(event,session){
     var u=session&&session.user?session.user:null;
     if(u){
