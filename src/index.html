@@ -7,6 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400;500;600;700&family=Silkscreen:wght@400;700&display=swap" rel="stylesheet">
+<script defer src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.117.3/dist/umd/supabase.min.js"></script>
 <style>
 :root{
   --bg:#0b1020;--panel:#151c35;--panel2:#1d2648;--line:#2d3a6b;--line2:#3c4c88;
@@ -542,6 +543,9 @@ body.touch .pad,body.touch .abtn{display:block}
 </script>
 <script>
 (function(){
+/* Supabase: valores públicos (la seguridad la dan las políticas RLS de la tabla saves). */
+var SUPABASE_URL="https://ipxgjogvfimzabsctkfe.supabase.co";
+var SUPABASE_ANON_KEY="sb_publishable_c8shlOdncYHiVPETH-fy3A_R2vncKYj";
 var WORLDS=[
   {ico:"🏡",nm:"Distrito Fundamentos",d:"Arreglos, strings y búsquedas básicas"},
   {ico:"⚓",nm:"Puerto Hash",d:"Hash maps, two pointers, ventanas y prefijos"},

@@ -15,6 +15,7 @@ const LESSONS = [
   "chibi",          // dibujo de personajes 32x48 y animaciones
   "title",          // pantalla de inicio
   "settings",       // configuración, música, efectos y voz
+  "cloud",          // cuenta y guardado en la nube (Supabase)
 ];
 
 const template = readFileSync("src/index.html", "utf8");
