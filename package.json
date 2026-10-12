@@ -1,0 +1,13 @@
+{
+  "name": "algorithm-villa",
+  "version": "1.0.0",
+  "private": true,
+  "description": "RPG pixel art para aprender Python, algoritmos y LeetCode escribiendo código.",
+  "type": "module",
+  "scripts": {
+    "build": "node build.mjs",
+    "dev": "node dev.mjs",
+    "check": "node scripts/check-lessons.mjs"
+  },
+  "engines": { "node": ">=18" }
+}
