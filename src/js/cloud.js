@@ -135,7 +135,8 @@ function cloudTitleHtml(){
   if(!cloudEnabled())return "";   // sin nube (offline): no mostramos el bloque en el inicio
   var st=cloudState();
   if(st.user)
-    return '<div class="tcloud ok"><span>☁️ Sesión iniciada como <b>'+esc(st.email||"tu cuenta")+'</b> · tu avance se guarda en la nube</span></div>';
+    return '<div class="tcloud ok"><span>☁️ Sesión iniciada como <b>'+esc(st.email||"tu cuenta")+'</b> · tu avance se guarda en la nube</span>'
+      +'<div class="trow"><button class="pbtn" id="tsync">☁️ Sincronizar ahora</button><button class="pbtn" id="tout">Cerrar sesión</button></div></div>';
   var provs=(typeof CLOUD_PROVIDERS!=="undefined")?CLOUD_PROVIDERS:["github"];
   var btns="";
   if(provs.indexOf("google")>=0)btns+='<button class="pbtn tsocial" id="tgoog">🔵 Continuar con <b>Google</b></button>';
@@ -147,6 +148,8 @@ function cloudTitleHtml(){
 function cloudTitleBind(){
   if($("tgoog"))$("tgoog").onclick=function(){cloudSignIn("google")};
   if($("tgh"))$("tgh").onclick=function(){cloudSignIn("github")};
+  if($("tsync"))$("tsync").onclick=function(){cloudSyncNow()};
+  if($("tout"))$("tout").onclick=function(){cloudSignOut()};
 }
 
 /* Envolver save() para sincronizar también en la nube. */
