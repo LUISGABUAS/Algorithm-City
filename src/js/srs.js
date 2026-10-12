@@ -37,7 +37,7 @@ function reviewEmpty(){
    +'<div class="nextrow" style="justify-content:center"><button class="pbtn" id="b1">◀ Volver</button>'+(total?'<button class="pbtn mint" id="b2">Practicar algo al azar</button>':'')+'</div></div></div></div>';
   var c=$("stagec").getContext("2d");c.setTransform(2,0,0,2,0,0);c.imageSmoothingEnabled=false;drawClass(c,0,0,"bigo",2,{player:true});
   var pc=$("por").getContext("2d");pc.imageSmoothingEnabled=false;pc.drawImage(npcSprite(424242),0,0,32,32,0,1,32,31);
-  typeInto($("say"),total?"¡Nada pendiente hoy! Tu próximo repaso es el "+fmtDate(nx)+". Si quieres, practica algo al azar (no cambia tu calendario).":"Todavía no hay nada que repasar. Toma tu primera clase en Villa Fundamentos y aquí aparecerá.");
+  typeInto($("say"),total?"¡Nada pendiente hoy! Tu próximo repaso es el "+fmtDate(nx)+". Si quieres, practica algo al azar (no cambia tu calendario).":"Todavía no hay nada que repasar. Toma tu primera clase en Distrito Fundamentos y aquí aparecerá.");
   $("b1").onclick=reviewExit;if($("b2"))$("b2").onclick=function(){openReview(true)};
 }
 function fmtDate(s){if(!s)return "—";var p=s.split("-"),m=["ene","feb","mar","abr","may","jun","jul","ago","sep","oct","nov","dic"];return (+p[2])+" de "+m[+p[1]-1]}
