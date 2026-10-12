@@ -32,7 +32,10 @@ function cloudState(){
           status:SB_STATUS, last:SB_LAST};
 }
 /* Vuelve a dibujar la Configuración si está abierta (para reflejar el estado de sesión). */
-function cloudRefreshUI(){ if(typeof renderSettings==="function" && $("cfgm")) renderSettings(); }
+function cloudRefreshUI(){
+  if(typeof renderSettings==="function" && $("cfgm")) renderSettings();
+  if(typeof titleRefreshCloud==="function" && $("tcloud-wrap")) titleRefreshCloud();
+}
 
 function cloudSignIn(provider){
   var c=cloudClient();
@@ -125,6 +128,25 @@ function cloudBindSettings(){
   if($("cfggh"))$("cfggh").onclick=function(){cloudSignIn("github")};
   if($("cfgsync"))$("cfgsync").onclick=function(){cloudSyncNow()};
   if($("cfgout"))$("cfgout").onclick=function(){cloudSignOut()};
+}
+
+/* --- Bloque de acceso para la pantalla de inicio (estilo "Admisión") --- */
+function cloudTitleHtml(){
+  if(!cloudEnabled())return "";   // sin nube (offline): no mostramos el bloque en el inicio
+  var st=cloudState();
+  if(st.user)
+    return '<div class="tcloud ok"><span>☁️ Sesión iniciada como <b>'+esc(st.email||"tu cuenta")+'</b> · tu avance se guarda en la nube</span></div>';
+  var provs=(typeof CLOUD_PROVIDERS!=="undefined")?CLOUD_PROVIDERS:["github"];
+  var btns="";
+  if(provs.indexOf("google")>=0)btns+='<button class="pbtn tsocial" id="tgoog">🔵 Continuar con <b>Google</b></button>';
+  if(provs.indexOf("github")>=0)btns+='<button class="pbtn tsocial" id="tgh">⚫ Continuar con <b>GitHub</b></button>';
+  return '<div class="tcloud"><div class="tcldh">Guarda tu avance en la nube</div>'
+    +'<div class="trow">'+btns+'</div>'
+    +'<small>Opcional: entra desde cualquier dispositivo y sigue donde lo dejaste. También puedes jugar sin cuenta.</small></div>';
+}
+function cloudTitleBind(){
+  if($("tgoog"))$("tgoog").onclick=function(){cloudSignIn("google")};
+  if($("tgh"))$("tgh").onclick=function(){cloudSignIn("github")};
 }
 
 /* Envolver save() para sincronizar también en la nube. */
