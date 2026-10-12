@@ -46,14 +46,13 @@ function afterTitle(){if(ST.lvl===undefined)levelPicker(true);else if(!ST.av)set
 function resetSave(){ST={xp:0,coins:0,gems:0,streak:0,solved:{},played:{},exam:{},cur:{},since:new Date().toISOString().slice(0,10),att:0,hits:0,bestStreak:0,name:"Programador",lesson:{}};
   save();buildPlayer();hud();if(typeof questUI==="function")questUI()}
 function drawLogoIcon(c){
-  // emblema: skyline neón dentro de corchetes de código  [  city  ]
-  R(c,OL,2,2,20,20);R(c,"#0b1226",3,3,18,18);R(c,"#17254f",3,3,18,9);R(c,"#dbeafe",17,5,2,2);
-  R(c,"#22d3ee",6,11,3,8);R(c,"#5eead4",10,7,4,12);R(c,"#c084fc",15,10,3,9);
-  R(c,"#fbbf24",11,5,1,2);R(c,"#ff5b5b",11,4,1,1);
-  R(c,OL,6,13,1,1);R(c,OL,7,16,1,1);R(c,OL,11,9,1,1);R(c,OL,12,12,1,1);R(c,OL,11,15,1,1);R(c,OL,16,12,1,1);R(c,OL,16,15,1,1);
-  R(c,"#1e2a4a",3,19,18,1);
-  R(c,"#5eead4",3,7,1,10);R(c,"#5eead4",3,7,2,1);R(c,"#5eead4",3,16,2,1);
-  R(c,"#5eead4",20,7,1,10);R(c,"#5eead4",19,7,2,1);R(c,"#5eead4",19,16,2,1);
+  // emblema: prompt de terminal dentro de corchetes de código  [ >_ ]
+  var M="#5eead4", W="#e8eef8", A="#fbbf24";
+  R(c,M,3,4,2,16);R(c,M,3,4,5,2);R(c,M,3,18,5,2);        // corchete [
+  R(c,M,19,4,2,16);R(c,M,16,4,5,2);R(c,M,16,18,5,2);     // corchete ]
+  R(c,W,8,8,2,2);R(c,W,9,9,2,2);R(c,W,10,10,2,2);R(c,W,11,11,2,2);R(c,W,12,12,2,2);  // chevron ❯ (arriba)
+  R(c,W,8,16,2,2);R(c,W,9,15,2,2);R(c,W,10,14,2,2);R(c,W,11,13,2,2);                  // chevron ❯ (abajo)
+  R(c,A,14,16,4,2);                                      // cursor _
 }
 
 /* ---------- fondo: ciudad futurista en pixel art ---------- */
