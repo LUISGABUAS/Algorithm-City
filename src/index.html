@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Algorithm Villa</title>
+<title>Algorithm City</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400;500;600;700&family=Silkscreen:wght@400;700&display=swap" rel="stylesheet">
@@ -553,10 +553,11 @@ var WORLDS=[
   {ico:"🗼",nm:"Torre",d:"Entrevistas y casos difíciles"}
 ];
 var TIME=120,EXAM_N=10,EXAM_PASS=7;
-var KEY="algorithm-villa-v2";
+var KEY="algorithm-city-v2";
 
 function load(){
   try{var s=JSON.parse(localStorage.getItem(KEY));if(s&&s.solved)return s}catch(e){}
+  try{var v=JSON.parse(localStorage.getItem("algorithm-villa-v2"));if(v&&v.solved)return v}catch(e){} // partida guardada con el nombre anterior
   var old=null;try{old=JSON.parse(localStorage.getItem("algorithm-villa-v1")||localStorage.getItem("clinica-pixel-v2"))}catch(e){}
   return {xp:(old&&old.xp)||0,coins:0,gems:0,streak:0,solved:{},played:{},exam:{},cur:{}};
 }
@@ -646,7 +647,7 @@ var ACH=[
  ["💯","Centenario","100 casos resueltos",function(g){return g.solved>=100}],
  ["🏆","Acreditado","Aprueba tu primer examen",function(g){return g.exams>=1}],
  ["🌆","Medio pueblo","4 edificios acreditados",function(g){return g.exams>=4}],
- ["👑","Alcalde de la Villa","Los 8 edificios acreditados",function(g){return g.exams>=8}],
+ ["👑","Alcalde de la Ciudad","Los 8 edificios acreditados",function(g){return g.exams>=8}],
  ["🎓","Dev","Llega al nivel 6",function(g){return g.lv>=6}],
  ["🚀","Listo para Big Tech","Llega al nivel 18",function(g){return g.lv>=18}],
  ["🧠","Todo el banco","Resuelve los 227 casos",function(g){return g.solved>=g.total}]

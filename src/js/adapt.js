@@ -63,7 +63,7 @@ var _hlA=hl;hl=function(c){return _hlA(c).replace(/___/g,'<span class="blank">__
 /* ---- selector de nivel ---- */
 function levelPicker(first){closeProfile();
   var h='<div class="modal lvmodal" id="modal"><div class="mcard"><button class="mx" id="mx" title="Cerrar (Esc)">✕</button>'
-   +'<div class="mlab">'+(first?'¡BIENVENIDO A ALGORITHM VILLA!':'NIVEL DE EXPERIENCIA')+'</div><h2 class="lvh">¿Cuánta experiencia tienes programando?</h2>'
+   +'<div class="mlab">'+(first?'¡BIENVENIDO A ALGORITHM CITY!':'NIVEL DE EXPERIENCIA')+'</div><h2 class="lvh">¿Cuánta experiencia tienes programando?</h2>'
    +'<p class="lvp">Así adapto las clases a ti. Puedes cambiarlo cuando quieras desde tu ficha (toca tu foto arriba a la izquierda).</p><div class="lvopts" id="lvbody">'
    +LVL_INFO.map(function(x,i){return '<button class="lvopt'+(ST.lvl===i?' cur':'')+'" data-l="'+i+'"><span class="lvic">'+x.ic+'</span><span><b>'+esc(x.nm)+'</b><small>'+esc(x.d)+'</small></span></button>'}).join("")
    +'<button class="lvopt quiz" id="lvquiz"><span class="lvic">🤔</span><span><b>No estoy seguro</b><small>Respóndeme 4 preguntas rápidas y te recomiendo un nivel.</small></span></button></div></div></div>';

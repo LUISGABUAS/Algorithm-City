@@ -12,7 +12,7 @@ function showTitle(){if($("tscreen"))return;HELD=[];
   var d=document.createElement("div");d.id="tscreen";d.className="title";document.body.appendChild(d);document.body.classList.add("titling");
   var L=levelInfo(),sv=hasSave(),tip=0;
   d.innerHTML='<div class="tshade"></div><section class="tpanel">'
-   +'<div class="tlogo"><canvas id="tico" width="24" height="24"></canvas><h1><span>ALGORITHM</span><b>VILLA</b></h1></div>'
+   +'<div class="tlogo"><canvas id="tico" width="24" height="24"></canvas><h1><span>ALGORITHM</span><b>CITY</b></h1></div>'
    +'<div class="tterm"><span id="tty"></span><i class="tcar"></i></div>'
    +'<blockquote class="ttip" id="ttip">'+esc(TITLE_TIPS[0])+'</blockquote>'
    +'<div class="tcard"><div class="tch"><canvas id="tcico" width="16" height="16"></canvas><div><b>Tu perfil de dev</b><small>'+(sv?'Partida guardada · sigue donde lo dejaste':'Crea tu personaje para empezar')+'</small></div></div>'

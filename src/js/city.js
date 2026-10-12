@@ -120,7 +120,7 @@ function buildWorld(){
   OBJS.push({fountain:true,x:19*T,y:132*T,by:136*T-1});for(y=132;y<136;y++)for(x=19;x<23;x++)block(x,y);
   [[8,133],[8,136],[25,133]].forEach(function(p){addObj(SP.bench,p[0],p[1],0,0)});
   [[13,132],[18,137],[13,137],[24,137]].forEach(function(p){addObj(SP.lamp,p[0],p[1],0,-24)});
-  addObj(SP.sign,10,131,-8,-30);block(11,131);OBJS[OBJS.length-1].sign=true;SIGNS["10,131"]=SIGNS["11,131"]="Algorithm Villa · la ciudad donde se construye tecnología. Sigue el paseo hacia el norte: cada control de acceso se abre al acreditar un distrito.";
+  addObj(SP.sign,10,131,-8,-30);block(11,131);OBJS[OBJS.length-1].sign=true;SIGNS["10,131"]=SIGNS["11,131"]="Algorithm City · la ciudad donde se construye tecnología. Sigue el paseo hacia el norte: cada control de acceso se abre al acreditar un distrito.";
   addObj(SP.truck,5,138,-8,-14);block(6,138);addObj(SP.bikes,24,138,0,0);block(25,138);addObj(SP.vend,27,135,0,-10);
   /* bordes: rascacielos */
   for(y=0;y<MH;y+=2){[0,MW-2].forEach(function(x2){if(G(x2,y)==="a"||G(x2,y+1)==="a")return;OBJS.push({s:sprTowerBG(hash(x2,y)),x:x2*T,y:(y+2)*T-(56+hash(hash(x2,y),3)%40),by:(y+2)*T-1});for(var a2=0;a2<2;a2++)for(var b2=0;b2<2;b2++)block(x2+a2,y+b2)})}

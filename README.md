@@ -1,4 +1,4 @@
-# Algorithm Villa
+# Algorithm City
 
 RPG en pixel art para aprender Python, algoritmos y LeetCode escribiendo código de verdad, desde cero hasta entrevistas de Big Tech.
 
@@ -68,6 +68,6 @@ Cada `git push` publica la nueva versión.
 
 ## Guardado
 
-Hoy el progreso se guarda en el navegador (`localStorage`, clave `algorithm-villa-v2`). En Configuración → Partida hay un código de respaldo para pasarlo a otro dispositivo.
+Hoy el progreso se guarda en el navegador (`localStorage`, clave `algorithm-city-v2`; las partidas guardadas con el nombre anterior `algorithm-villa-v2` se migran solas). En Configuración → Partida hay un código de respaldo para pasarlo a otro dispositivo.
 
 Siguiente paso: inicio de sesión y guardado en la nube con Supabase (Auth + tabla `saves` con el progreso en JSON).

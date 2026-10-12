@@ -1,8 +1,8 @@
 
 /* ================= CONFIGURACIÓN · MÚSICA · EFECTOS · VOZ ================= */
-var CFG_KEY="algorithm-villa-cfg";
+var CFG_KEY="algorithm-city-cfg";
 var CFG_DEF={vol:70,sfx:70,mus:40,style:"chip",musicOn:true,tts:false,ttsRate:1.1,zoom:1,fx:true,labels:true,hint:true,txt:"normal",rm:false,walk:"normal",revWarn:true,size:100,plain:false,hc:false};
-var CFG=(function(){var c={};try{c=JSON.parse(localStorage.getItem(CFG_KEY)||"{}")||{}}catch(e){}for(var k in CFG_DEF)if(c[k]===undefined)c[k]=CFG_DEF[k];return c})();
+var CFG=(function(){var c={};try{c=JSON.parse(localStorage.getItem(CFG_KEY)||localStorage.getItem("algorithm-villa-cfg")||"{}")||{}}catch(e){}for(var k in CFG_DEF)if(c[k]===undefined)c[k]=CFG_DEF[k];return c})();
 var CFG_SAVED=0;
 function cfgSave(){try{localStorage.setItem(CFG_KEY,JSON.stringify(CFG))}catch(e){}CFG_SAVED=Date.now();applyCfg()}
 function CFG_FX(){return CFG.fx&&!CFG.rm}

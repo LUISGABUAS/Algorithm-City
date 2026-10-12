@@ -1,4 +1,4 @@
-/* ================= ALGORITHM VILLA · MAPA ================= */
+/* ================= ALGORITHM CITY · MAPA ================= */
 var T=16,MW=32,MH=146,WPX=MW*T,WPY=MH*T;
 var MAPON=false,RAF=0,LASTW=-1,CV=null,CX=null,VW=22,VH=14;
 var GROUND=null,MINIBASE=null,GT=null,SOL=null,DOORS=null,OBJS=[],SMOKE=[],CHIMS=[],BUTTERS=[];
@@ -624,7 +624,7 @@ function buildWorld(){
   OBJS.push({fountain:true,x:19*T,y:132*T,by:136*T-1});for(y=132;y<136;y++)for(x=19;x<23;x++)block(x,y);
   [[8,133],[8,136],[25,133]].forEach(function(p){addObj(SP.bench,p[0],p[1],0,0)});
   [[13,132],[18,137],[13,137],[24,137]].forEach(function(p){addObj(SP.lamp,p[0],p[1],0,-16)});
-  addObj(SP.sign,10,131,0,-10);block(11,131);OBJS[OBJS.length-1].sign=true;SIGNS["10,131"]=SIGNS["11,131"]="Algorithm Villa · sigue el camino hacia el norte: cada reja se abre al acreditar un mundo.";
+  addObj(SP.sign,10,131,0,-10);block(11,131);OBJS[OBJS.length-1].sign=true;SIGNS["10,131"]=SIGNS["11,131"]="Algorithm City · sigue el camino hacia el norte: cada reja se abre al acreditar un mundo.";
   [4,10,22,28].forEach(function(x2){addObj(SP.lamp,x2,138,0,-16)});
   /* ---- bordes ---- */
   for(x=0;x<MW;x++)for(y=0;y<MH;y++){if((x<2||y<2||x>=MW-2||y>=MH-2)&&G(x,y)!=="k"&&G(x,y)!=="a"&&G(x,y)!=="n"){tree(x,y,hash(x,y)%3===0?"pine":(hash(x,y)%3===1?"oak2":"oak"))}}
@@ -660,7 +660,7 @@ function facingGate(){if(P.moving)return -1;var f=facing(),w=GATE_AT[f[0]+","+f[
 function initLife(){
   WALKERS=[];
   function add(x,y,i,opts){var seed=opts.seed||hash(i*17+3,99);var o={tx:x,ty:y,sx:x,sy:y,fx:x,fy:y,t:0,moving:false,dir:opts.dir||"down",dist:0,wait:Math.random()*2,seed:seed,fr:walkerFrames(seed),name:opts.name||NAMES[seed%NAMES.length],role:opts.role||ROLES[(seed>>>5)%ROLES.length],tip:TIPS[i%TIPS.length],talk:0,static:!!opts.static,say:opts.say||null,zone:zoneOf(y)};WALKERS.push(o);return o}
-  add(13,134,0,{static:true,seed:424242,name:"Profe Ada",role:"Mentora",dir:"right",say:function(){var q=questInfo();return "¡Bienvenido a Algorithm Villa! Cada edificio es un mundo de algoritmos y van en orden, de abajo hacia arriba. "+q.say}});
+  add(13,134,0,{static:true,seed:424242,name:"Profe Ada",role:"Mentora",dir:"right",say:function(){var q=questInfo();return "¡Bienvenido a Algorithm City! Cada edificio es un mundo de algoritmos y van en orden, de abajo hacia arriba. "+q.say}});
   GATES.forEach(function(g,i){add(g.x+2,g.y+1,50+i,{static:true,seed:7000+i*131,name:"Guardia",role:"Mundo "+(g.w+1),dir:"down",say:function(){return gateLocked(g.w)?"Alto ahí. Para pasar a "+WORLDS[g.w+1].nm+" primero acredita "+WORLDS[g.w].nm+" en su Aula Magna.":"¡Adelante! "+WORLDS[g.w+1].nm+" te espera."}})});
   var spots=[[16,133],[14,131],[8,124],[9,118],[23,108],[22,101],[8,92],[9,86],[23,76],[22,70],[8,60],[9,54],[23,44],[22,38],[8,28],[9,22],[23,12]];
   spots.forEach(function(s,i){if(walkable(s[0],s[1])&&isStreet(G(s[0],s[1]))&&!walkerAt(s[0],s[1]))add(s[0],s[1],i,{})});
@@ -706,7 +706,7 @@ function questInfo(){
     var nm=WORLDS[w].nm,les=typeof LESSONS!=="undefined"&&(LESSONS["w"+(w+1)+":0"]||[]).some(function(l){return !ST.lesson[l.id]});
     return {w:w,text:(les?"Entra a <b>"+esc(nm)+"</b> y toma tu primera clase":"Acredita <b>"+esc(nm)+"</b> (Mundo "+(w+1)+") en su Aula Magna"),say:"Tu misión ahora: "+(les?"entra a "+nm+" y toma tu primera clase.":"acreditar "+nm+".")+" Sigue las huellas doradas."};
   }
-  return {w:-1,text:"¡Acreditaste toda la Villa! 🏆",say:"¡Acreditaste los 8 mundos! Eres leyenda de la Villa."};
+  return {w:-1,text:"¡Acreditaste toda la Ciudad! 🏆",say:"¡Acreditaste los 8 mundos! Eres leyenda de la Ciudad."};
 }
 function updateTrail(dt){
   TRAIL_T-=dt;if(TRAIL_T>0)return;TRAIL_T=.4;
@@ -728,6 +728,6 @@ function questUI(){
 }
 function zoneBanner(){
   var z=zoneOf(P.ty);if(z===LASTZONE)return;var first=LASTZONE===null;LASTZONE=z;questUI();if(first)return;
-  var el=$("zban");if(!el)return;el.innerHTML=z<0?'<small>INICIO</small>Plaza de Algorithm Villa':'<small>MUNDO '+(z+1)+'</small>'+WORLDS[z].ico+' '+esc(WORLDS[z].nm);
+  var el=$("zban");if(!el)return;el.innerHTML=z<0?'<small>INICIO</small>Plaza de Algorithm City':'<small>MUNDO '+(z+1)+'</small>'+WORLDS[z].ico+' '+esc(WORLDS[z].nm);
   el.classList.remove("on");void el.offsetWidth;el.classList.add("on");
 }
