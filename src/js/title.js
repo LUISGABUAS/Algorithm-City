@@ -72,14 +72,18 @@ function titleBgLayout(W,H){
   var pend=[{x:Math.round(W*0.5),ph:0},{x:Math.round(W*0.72),ph:2.1},{x:Math.round(W*0.88),ph:4.2}];
   var C={k:"#c792ea",f:"#82aaff",s:"#c3e88d",n:"#f78c6c",c:"#546e7a",t:"#89ddff",v:"#d7deea"};
   var code=[
-    [0,[[3,C.k],[1,0],[6,C.f],[1,0],[4,C.v],[1,0],[6,C.v]]],
+    [0,[[1,C.c],[1,0],[10,C.c]]],
+    [0,[[3,C.k],[1,0],[7,C.f],[1,0],[4,C.v],[1,0],[4,C.v]]],
     [1,[[4,C.v],[1,0],[1,C.t],[1,0],[2,C.n]]],
-    [1,[[3,C.k],[1,0],[2,C.v],[1,0],[2,C.k],[1,0],[6,C.f]]],
+    [1,[[3,C.k],[1,0],[1,C.v],[1,0],[1,C.v],[1,0],[2,C.k],[1,0],[9,C.f]]],
+    [2,[[4,C.v],[1,0],[1,C.t],[1,0],[6,C.v],[1,0],[1,C.t],[1,0],[1,C.v]]],
     [2,[[2,C.k],[1,0],[4,C.v],[1,0],[2,C.t],[1,0],[4,C.v]]],
-    [3,[[6,C.k],[1,0],[2,C.v],[1,0],[1,C.v]]],
+    [3,[[6,C.k],[1,0],[1,C.t],[2,C.v],[1,C.t],[1,C.v],[1,C.t]]],
+    [2,[[4,C.v],[1,C.t],[1,C.v],[1,C.t],[1,0],[1,C.t],[1,0],[1,C.v]]],
     [0,[]],
-    [0,[[1,C.c],[1,0],[9,C.c]]],
-    [0,[[6,C.f],[1,0],[2,C.n],[1,0],[5,C.s]]]
+    [0,[[1,C.c],[1,0],[8,C.c]]],
+    [0,[[6,C.f],[1,0],[2,C.n],[1,0],[2,C.n],[1,0],[1,C.n]]],
+    [0,[[1,C.t],[2,C.n],[1,C.t],[1,0],[1,C.t],[2,C.n],[1,C.t]]]
   ];
   return {W:W,H:H,win:win,deskY:deskY,peds:peds,rain:rain,pend:pend,code:code,type:{li:0,ci:0,t:0}};
 }
@@ -128,10 +132,13 @@ function cafeBarista(c,W,H,t){
 }
 function cafeCode(c,L,t,x,y,w,h){
   var tp=L.type;tp.t++;
-  if(tp.t%2===0){var cur=L.code[tp.li];if(cur){var tot=0,ss=cur[1];for(var s=0;s<ss.length;s++)tot+=ss[s][0];tp.ci++;if(tp.ci>tot+2){tp.ci=0;tp.li++;if(tp.li>=L.code.length)tp.li=0;}}}
-  var lineH=4,maxLines=Math.floor(h/lineH),start=Math.max(0,tp.li-maxLines+1),yy=y;
-  for(var li=start;li<=tp.li&&yy<y+h;li++){var ln=L.code[li];if(!ln){yy+=lineH;continue;}
-    var cx=x+ln[0]*3,segs=ln[1],reveal=(li<tp.li)?99999:tp.ci,used=0;
+  var lineH=4,maxLines=Math.floor(h/lineH);
+  // la línea "activa" se escribe; las demás ya están llenas → la pantalla siempre se ve con código
+  if(tp.t%2===0){var cur=L.code[tp.li],tot=0;if(cur){var ss=cur[1];for(var s=0;s<ss.length;s++)tot+=ss[s][0];}tp.ci++;if(tp.ci>tot+3){tp.ci=0;tp.li=(tp.li+1)%L.code.length;}}
+  var start=Math.max(0,Math.min(tp.li-Math.floor(maxLines*0.6),L.code.length-maxLines));if(start<0)start=0;
+  var yy=y;
+  for(var li=start;li<start+maxLines&&li<L.code.length;li++){var ln=L.code[li];if(!ln){yy+=lineH;continue;}
+    var cx=x+ln[0]*3,segs=ln[1],reveal=(li===tp.li)?tp.ci:99999,used=0;
     for(var si=0;si<segs.length;si++){var sw=segs[si][0],col=segs[si][1],show=Math.max(0,Math.min(sw,reveal-used));
       if(show>0&&col){c.fillStyle=col;c.fillRect(cx,yy,show,1);}cx+=sw+1;used+=sw;if(used>=reveal&&li===tp.li)break;}
     if(li===tp.li&&(tp.t%16<8)){c.fillStyle="#9feaf9";c.fillRect(cx,yy-1,1,3);}
