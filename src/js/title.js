@@ -63,7 +63,7 @@ function drawLogoIcon(c){
 var TBG=null;
 function titleBgLayout(W,H){
   function rng(seed){var s=seed>>>0||1;return function(){s=(Math.imul(s,1664525)+1013904223)>>>0;return s/4294967296}}
-  var r=rng(70707), hz=Math.round(H*0.60), i;
+  var r=rng(70707), hz=Math.round(H*0.50), i;
   var neon=["#22d3ee","#e879f9","#5eead4","#60a5fa","#f472b6","#38bdf8","#a78bfa"];
   var stars=[],ns=Math.round(W*H/650);
   for(i=0;i<ns;i++)stars.push([Math.floor(r()*W),Math.floor(r()*hz),r()<.15?2:1,.4+r()*.6]);
@@ -79,9 +79,10 @@ function titleBgLayout(W,H){
     }
     return arr;
   }
-  var back =row(hz+6 ,Math.round(H*0.10),Math.round(H*0.30),Math.max(8,Math.round(W*0.024)),Math.round(W*0.055),["#0a1026","#0c1430","#091022"],["#1b2a4a","#24324f"],{});
-  var mid  =row(hz+12,Math.round(H*0.22),Math.round(H*0.52),Math.max(11,Math.round(W*0.03)),Math.round(W*0.07),["#0e1a34","#0c1730","#111d3c","#131a38"],neon,{step:1,ant:1,bill:1,search:1});
-  var front=row(H+2  ,Math.round(H*0.10),Math.round(H*0.26),Math.round(W*0.07),Math.round(W*0.14),["#0b1226","#091020","#0c1430"],["#fbbf24","#fcd34d","#22d3ee","#fb923c"],{step:1});
+  // todas las capas nacen del piso (borde inferior) para que no "floten"
+  var back =row(H+2,Math.round(H*0.30),Math.round(H*0.52),Math.max(8,Math.round(W*0.024)),Math.round(W*0.055),["#0a1026","#0c1430","#091022"],["#1b2a4a","#24324f"],{});
+  var mid  =row(H+2,Math.round(H*0.42),Math.round(H*0.78),Math.max(11,Math.round(W*0.03)),Math.round(W*0.07),["#0e1a34","#0c1730","#111d3c","#131a38"],neon,{step:1,ant:1,bill:1,search:1});
+  var front=row(H+2,Math.round(H*0.16),Math.round(H*0.33),Math.round(W*0.06),Math.round(W*0.12),["#0b1226","#091020","#0c1430"],["#fbbf24","#fcd34d","#22d3ee","#fb923c"],{step:1});
   var ships=[];for(i=0;i<6;i++)ships.push({lane:Math.round(H*(0.10+0.055*i)),spd:0.25+r()*0.55,dir:r()<.5?1:-1,off:r()*W,col:neon[Math.floor(r()*neon.length)],len:2+Math.floor(r()*3)});
   return {W:W,H:H,hz:hz,neon:neon,stars:stars,back:back,mid:mid,front:front,ships:ships,
           shoot:{life:999,next:60+Math.floor(r()*120),x:0,y:0,vx:0,vy:0},
