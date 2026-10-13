@@ -1,8 +1,9 @@
 
 /* ================= CONFIGURACIÓN · MÚSICA · EFECTOS · VOZ ================= */
 var CFG_KEY="algorithm-city-cfg";
-var CFG_DEF={vol:70,sfx:70,mus:40,style:"chip",musicOn:true,tts:false,ttsRate:1.1,zoom:1,fx:true,labels:true,hint:true,txt:"normal",rm:false,walk:"normal",revWarn:true,size:100,plain:false,hc:false};
+var CFG_DEF={vol:70,sfx:70,mus:40,style:"amb",musicOn:true,tts:false,ttsRate:1.1,zoom:1,fx:true,labels:true,hint:true,txt:"normal",rm:false,walk:"normal",revWarn:true,size:100,plain:false,hc:false};
 var CFG=(function(){var c={};try{c=JSON.parse(localStorage.getItem(CFG_KEY)||localStorage.getItem("algorithm-villa-cfg")||"{}")||{}}catch(e){}for(var k in CFG_DEF)if(c[k]===undefined)c[k]=CFG_DEF[k];return c})();
+if(!CFG.ambMig){CFG.style="amb";CFG.ambMig=1;try{localStorage.setItem(CFG_KEY,JSON.stringify(CFG))}catch(e){}}  // música tranquila por defecto (una vez)
 var CFG_SAVED=0;
 function cfgSave(){try{localStorage.setItem(CFG_KEY,JSON.stringify(CFG))}catch(e){}CFG_SAVED=Date.now();applyCfg()}
 function CFG_FX(){return CFG.fx&&!CFG.rm}
@@ -10,6 +11,7 @@ function CFG_FX(){return CFG.fx&&!CFG.rm}
 /* ---------- audio ---------- */
 var AU={ctx:null,master:null,mus:null,sfx:null,noise:null,playing:false,song:null,queue:[],step:0,next:0,timer:0,crackle:null};
 var STYLES={
+ amb:{nm:"Ambiente tranquilo",songs:["Compilando en calma","Café y niebla","Modo enfoque","Variables al amanecer","Bucle sereno","Pausa larga"],bpm:[60,74]},
  chip:{nm:"Chiptune 8 bits",songs:["Commit inicial","Bucle infinito","Índice cero","Pila de llamadas","Push a main","Hola, mundo"],bpm:[124,148]},
  lofi:{nm:"Lo-fi para estudiar",songs:["Debug a las 2 a.m.","Café y recursión","Lluvia en el servidor","Notas de la entrevista","Pausa para el café","Árbol binario al atardecer"],bpm:[70,84]},
  synth:{nm:"Synthwave",songs:["Neón O(1)","Autopista de bits","Hash nocturno","Retro compilador","Ciudad de datos","Ventana deslizante"],bpm:[96,112]},
@@ -39,6 +41,11 @@ function chordAt(bar){var S=AU.song,sc=S.minor?[0,2,3,5,7,8,10]:[0,2,4,5,7,9,11]
 function schedStep(t){var S=AU.song,st=AU.step,bar=Math.floor(st/16),s=st%16,ch=chordAt(bar),B=AU.mus,sd=60/S.bpm/4,r=rngS(S.seed+bar*97+s);
   if(bar>=S.bars){newSong();return}
   var sec=Math.floor(bar/8)%4,intro=bar<2;
+  if(S.style==="amb"){
+    if(s===0){ch.t.slice(0,3).forEach(function(m){tone(B,"sine",mtof(m),t,sd*16,.05,{lp:1100,a:sd*2,r:sd*8,det:4});tone(B,"triangle",mtof(m),t,sd*16,.03,{lp:800,a:sd*2.5,r:sd*8,det:-5})});
+      tone(B,"sine",mtof(ch.r-24),t,sd*16,.14,{a:sd,r:sd*6});}
+    if(!intro&&(s===4||s===10)&&r()<.5){var mn=ch.r+12+ch.sc[Math.floor(r()*7)]-ch.sc[0];tone(B,"sine",mtof(mn),t,sd*4,.05,{lp:2000,a:sd*.5,r:sd*3});}
+    if(r()<.05)noiseHit(B,t,.4,.015,4000);}
   if(S.style==="chip"){
     if(s%4===0)tone(B,"triangle",mtof(ch.r-12),t,sd*3,.22);if(s===6||s===14)tone(B,"triangle",mtof(ch.r),t,sd,.16);
     if(!intro)tone(B,"square",mtof(ch.t[[0,1,2,1][s%4]]+12),t,sd*.9,.035);
