@@ -110,6 +110,30 @@ function cloudSyncNow(){
   clearTimeout(SB_T); SB_PENDING=false; cloudPush(true);
 }
 
+/* --- Feedback privado por reto (solo lo vemos nosotros; la RLS lo protege) --- */
+function cloudFeedback(item,data){
+  var c=cloudClient(); if(!c||!SB_USER||!item)return;
+  var row={user_id:SB_USER.id,item:item}; for(var k in data)if(data[k]!==undefined&&data[k]!==null)row[k]=data[k];
+  try{c.from("feedback").upsert(row,{onConflict:"user_id,item"}).then(function(){},function(){});}catch(e){}
+}
+function feedbackBar(item,ctx,wrong){
+  if(!cloudEnabled()||!SB_USER)return "";
+  var why="";
+  if(wrong){var R=[["olvido","No me acordé"],["nuevo","Concepto nuevo"],["enunciado","No entendí el enunciado"],["tonto","Error tonto"],["adivine","Adivinando"]];
+    why='<div class="fbrow fbwhy"><span>¿Por qué fallaste?</span>'+R.map(function(r){return '<button class="fbx" data-reason="'+r[0]+'">'+esc(r[1])+'</button>'}).join("")+'</div>';}
+  return '<div class="fb" data-item="'+esc(item)+'" data-k="'+esc((ctx&&ctx.kind)||"")+'" data-w="'+((ctx&&ctx.w!=null)?ctx.w:"")+'" data-f="'+((ctx&&ctx.f!=null)?ctx.f:"")+'">'
+    +'<div class="fbrow"><span>¿Te sirvió este reto?</span><button class="fbx" data-useful="1">👍 Sí</button><button class="fbx" data-useful="0">👎 No</button></div>'
+    +why+'<div class="fbthx" hidden>¡Gracias! Nos ayuda a mejorar el juego.</div></div>';
+}
+function wireFeedback(host){var el=(host||document).querySelector(".fb[data-item]");if(!el)return;
+  var state={item:el.dataset.item,kind:el.dataset.k||null,world:el.dataset.w!==""?+el.dataset.w:null,floor:el.dataset.f!==""?+el.dataset.f:null};
+  [].forEach.call(el.querySelectorAll(".fbx"),function(b){b.onclick=function(){
+    if(b.dataset.useful!==undefined){state.useful=b.dataset.useful==="1";[].forEach.call(el.querySelectorAll("[data-useful]"),function(x){x.classList.remove("on")});}
+    else{state.reason=b.dataset.reason;[].forEach.call(el.querySelectorAll("[data-reason]"),function(x){x.classList.remove("on")});}
+    b.classList.add("on");cloudFeedback(state.item,state);var t=el.querySelector(".fbthx");if(t)t.hidden=false;
+  }});
+}
+
 /* HTML de la sección "CUENTA EN LA NUBE" para Configuración → Partida. */
 function cloudSectionHtml(){
   var h='<div class="csec">CUENTA EN LA NUBE</div>';

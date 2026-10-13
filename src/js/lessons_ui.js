@@ -198,8 +198,10 @@ function finishLesson(){
     +'<div class="big" style="font-size:26px">CLASE COMPLETADA</div>'+(first?'<div class="rw"><span class="stat">+<b>30</b> XP</span><span class="stat">+<b>10</b> 🪙</span></div>':'')
     +'<div class="why" style="text-align:left"><div class="t">📝 LO QUE APRENDISTE (ENTRA EN EL EXAMEN)</div><ul class="recap">'+L.recap.map(function(r){return '<li>'+esc(r)+'</li>'}).join("")+'</ul></div>'
     +'<div class="why" style="text-align:left"><div class="t">📚 REPASO</div>Esta clase volverá en tu Centro de Repaso mañana, en 3 días y en una semana para que no se te olvide.</div>'
+    +(typeof feedbackBar==="function"?feedbackBar("L:"+L.id,{kind:"lesson",w:w,f:f},false):"")
     +'<div class="nextrow" style="justify-content:center"><button class="pbtn" id="b1">Repetir clase</button><button class="pbtn mint" id="b2">'+(nextI>=0?'Siguiente clase ▶':'Ir a las salas ▶')+'</button></div></div></div></div>';
   $("main").innerHTML=h;
+  if(typeof wireFeedback==="function")wireFeedback(document);
   var c=$("stagec").getContext("2d");c.setTransform(2,0,0,2,0,0);c.imageSmoothingEnabled=false;drawClass(c,w,f,L.steps[L.steps.length-1].anim,2,{player:true});
   var pc=$("por").getContext("2d");pc.imageSmoothingEnabled=false;pc.drawImage(npcSprite(424242),0,0,32,32,0,1,32,31);
   typeInto($("say"),nextI>=0?"¡Muy bien! Sigue con la siguiente clase de este piso.":"¡Terminaste las clases de este piso! Las salas ya están abiertas: ahí te esperan problemas para practicar.");

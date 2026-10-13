@@ -481,6 +481,13 @@ body.touch .pad,body.touch .abtn{display:block}
 .rmcard>span{font-size:13px;color:var(--dim)}
 .rmout{font:12px ui-monospace,Menlo,monospace;color:#9fe0c4;margin-top:-2px}
 .rmcard .rmgo{justify-self:start;margin-top:4px}
+.fb{margin:12px 0 0;padding:10px 12px;border:2px solid var(--line2);background:#141d3a;display:grid;gap:8px}
+.fbrow{display:flex;flex-wrap:wrap;align-items:center;gap:8px;font-size:14px;color:var(--dim)}
+.fbrow>span{color:#cfe0ff}
+.fbx{background:#1d2648;border:2px solid var(--ol);color:#e8eef8;padding:5px 10px;font-size:13px;cursor:pointer}
+.fbx:hover{border-color:var(--mint)}
+.fbx.on{background:#14432a;border-color:var(--ok)}
+.fbthx{font-size:13px;color:var(--mint)}
 .why{margin-top:12px;background:#141b38;border:3px solid var(--ol);box-shadow:0 0 0 2px var(--line2);padding:12px 14px;font-size:16px}
 .why .t{font-family:Silkscreen;font-size:12px;color:var(--mint);margin-bottom:4px}
 .why a{color:var(--mint)}
@@ -992,6 +999,7 @@ function answer(i){
     +(c.sl?' <a target="_blank" rel="noopener" href="https://leetcode.com/problems/'+encodeURIComponent(c.sl)+'/">Abrir en LeetCode ↗</a>':'')+'</div>';
   $("nx").onclick=next;var oh=$("ohint");if(oh)oh.textContent=document.body.classList.contains("touch")?"✔ Lee la explicación y toca Siguiente":"✔ Lee la explicación y presiona Siguiente (Enter)";
   if(!ok&&RUN.mode==="room"&&typeof remediationFor==="function"){var _rm=remediationFor(roomConcepts(curRoom(),c));if(_rm.length){$("after").insertAdjacentHTML("beforeend",remindBar(_rm));wireRemind($("after"))}}
+  if(RUN.mode==="room"&&typeof feedbackBar==="function"){$("after").insertAdjacentHTML("beforeend",feedbackBar("C:"+c._id,{kind:"case",w:RUN.w,f:RUN.f},!ok));wireFeedback($("after"))}
   setTimeout(function(){var nx=$("nx");if(nx&&nx.getBoundingClientRect().bottom>window.innerHeight)nx.scrollIntoView({behavior:"smooth",block:"end"})},250);
 }
 function next(){if(!RUN||!RUN.answered)return;if(RUN.i<RUN.list.length-1){RUN.i++;showCase()}else result()}
