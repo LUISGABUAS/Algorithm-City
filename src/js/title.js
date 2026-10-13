@@ -176,77 +176,105 @@ function cafePlant(c,L){
 function bgFrames(){return (typeof FR!=="undefined"&&FR&&FR.sideidle)?FR:((typeof walkerFrames==="function")?walkerFrames(424242):null);}
 function drawPix(c,fr,key,x,y,flip){if(!fr)return;var img=fr[key]||fr.downidle;if(!img)return;x=Math.round(x);y=Math.round(y);c.save();c.imageSmoothingEnabled=false;if(flip){c.translate(x+32,y);c.scale(-1,1);c.drawImage(img,0,0,32,48,0,0,32,48);}else{c.drawImage(img,0,0,32,48,x,y,32,48);}c.restore();}
 function idleKey(v,t){return (Math.floor(t/20)%2)?v+"idle1":v+"idle";}
-/* ===== Escena 1: el personaje codeando en la cafetería ===== */
-function drawCafeScene(c,L,t){
-  var W=L.W,H=L.H,i,deskY=Math.round(H*0.68);
-  var wall=c.createLinearGradient(0,0,0,deskY);wall.addColorStop(0,"#2a1e26");wall.addColorStop(1,"#191320");c.fillStyle=wall;c.fillRect(0,0,W,deskY);
-  cafeWindow(c,L,t);
-  for(i=0;i<L.pend.length;i++)cafePendant(c,L.pend[i],H,t);
-  // barra + barista NPC al fondo
-  c.fillStyle="#2b2029";c.fillRect(Math.round(W*0.05),Math.round(H*0.5),Math.round(W*0.2),Math.round(H*0.06));
-  if(typeof walkerFrames==="function")drawPix(c,walkerFrames(77),idleKey("down",t+40),Math.round(W*0.1),Math.round(H*0.34),false);
-  cafeSteamCurl(c,Math.round(W*0.2),Math.round(H*0.5),t,0.8,"rgba(220,220,230,");
-  // piso
-  var fl=c.createLinearGradient(0,deskY,0,H);fl.addColorStop(0,"#3a2a1e");fl.addColorStop(1,"#241812");c.fillStyle=fl;c.fillRect(0,deskY,W,H-deskY);
-  // jugador sentado de espaldas (la mesa le tapa las piernas)
-  var px=Math.round(W*0.47);
-  drawPix(c,bgFrames(),idleKey("up",t),px,deskY-44,false);
-  var tY=deskY-12;c.fillStyle="#5a3f2a";c.fillRect(Math.round(W*0.33),tY,Math.round(W*0.36),4);c.fillStyle="#3f2c1c";c.fillRect(Math.round(W*0.33),tY+4,Math.round(W*0.36),2);
-  // laptop (vista trasera, con brillo de pantalla)
-  var lx=px+5,ly=tY-10;c.fillStyle="#1b2130";c.fillRect(lx-6,ly,20,10);c.fillStyle="#0e1420";c.fillRect(lx-5,ly+1,18,8);c.fillStyle="#2a3550";c.fillRect(lx+1,ly+3,3,3);
-  c.fillStyle="rgba(130,180,255,.12)";c.fillRect(lx-8,ly-2,24,3);
-  // café humeante
-  var ccx=Math.round(W*0.6),ccy=tY-6;c.fillStyle="#e8e2d6";c.fillRect(ccx,ccy,7,6);c.fillStyle="#5a3a22";c.fillRect(ccx+1,ccy+1,5,2);cafeSteamCurl(c,ccx+2,ccy,t,1,"rgba(230,225,215,");
+/* chibi de frente + mesa + laptop con la pantalla hacia nosotros (vemos cara y código) */
+function cafePatron(c,cx,baseY,t,ed){
+  var fr=ed?bgFrames():(typeof walkerFrames==="function"?walkerFrames(cx*7+3):null);
+  drawPix(c,fr,idleKey("down",t+cx),cx-16,baseY-40,false);
+  c.fillStyle="#5a3f2a";c.fillRect(cx-22,baseY-2,44,4);c.fillStyle="#3f2c1c";c.fillRect(cx-22,baseY+2,44,2);
+  var mw=ed?26:20,mh=ed?16:12,lx=cx-Math.round(mw/2),ly=baseY-4-mh;
+  c.fillStyle="#c7ccd6";c.fillRect(lx-2,baseY-4,mw+4,2);
+  c.fillStyle="#0c0f14";c.fillRect(lx-1,ly-1,mw+2,mh+2);c.fillStyle="#0e1420";c.fillRect(lx,ly,mw,mh);c.fillStyle="#141b28";c.fillRect(lx,ly,mw,2);
+  if(ed)drawCodeScreen(c,ed,t,lx+2,ly+3,mw-4,mh-4);
+  else for(var r=0;r<3;r++){c.fillStyle=["#82aaff","#c3e88d","#c792ea","#f78c6c"][(cx+r)%4];c.fillRect(lx+2,ly+3+r*3,Math.round((mw-4)*(0.4+0.5*Math.abs(Math.sin(t*0.1+cx+r)))),1);}
+  c.fillStyle="rgba(130,180,255,.1)";c.fillRect(lx-1,ly-3,mw+2,3);
 }
-/* ===== Escena 2: el personaje camina a la oficina (calle) ===== */
+/* ===== Escena 1: el personaje codeando en la cafetería (con compañía) ===== */
+function drawCafeScene(c,L,t){
+  var W=L.W,H=L.H,i,floorY=Math.round(H*0.72);
+  var wall=c.createLinearGradient(0,0,0,floorY);wall.addColorStop(0,"#4a3038");wall.addColorStop(1,"#2e2230");c.fillStyle=wall;c.fillRect(0,0,W,floorY);
+  c.fillStyle="rgba(255,220,180,0.03)";for(var yb=8;yb<floorY;yb+=12)c.fillRect(0,yb,W,1);
+  cafeWindow(c,L,t);
+  // estante con plantas/tazas
+  c.fillStyle="#3a2a2e";c.fillRect(Math.round(W*0.3),Math.round(H*0.13),Math.round(W*0.2),2);
+  for(i=0;i<7;i++){c.fillStyle=["#4e9d5a","#dfe6ee","#e9c7a1"][i%3];c.fillRect(Math.round(W*0.31)+i*8,Math.round(H*0.13)-4,4,4);}
+  // menú de pizarra
+  c.fillStyle="#14201c";c.fillRect(Math.round(W*0.06),Math.round(H*0.08),Math.round(W*0.14),Math.round(H*0.12));
+  c.fillStyle="rgba(230,220,180,.8)";c.fillRect(Math.round(W*0.08),Math.round(H*0.1),Math.round(W*0.07),1);
+  c.fillStyle="rgba(210,235,200,.6)";for(i=0;i<3;i++)c.fillRect(Math.round(W*0.08),Math.round(H*0.12)+i*3,Math.round(W*0.1*(i%2?0.6:1)),1);
+  for(i=0;i<L.pend.length;i++)cafePendant(c,L.pend[i],H,t);
+  // barra + barista
+  c.fillStyle="#3a2a24";c.fillRect(Math.round(W*0.02),Math.round(H*0.52),Math.round(W*0.22),Math.round(H*0.07));c.fillStyle="#54402c";c.fillRect(Math.round(W*0.02),Math.round(H*0.52),Math.round(W*0.22),2);
+  if(typeof walkerFrames==="function")drawPix(c,walkerFrames(77),idleKey("down",t+40),Math.round(W*0.07),Math.round(H*0.36),false);
+  cafeSteamCurl(c,Math.round(W*0.19),Math.round(H*0.52),t,0.8,"rgba(220,220,230,");
+  // otro cliente codeando (compañía)
+  cafePatron(c,Math.round(W*0.8),Math.round(H*0.56),t,null);
+  // piso
+  var fl=c.createLinearGradient(0,floorY,0,H);fl.addColorStop(0,"#4a3426");fl.addColorStop(1,"#2e2016");c.fillStyle=fl;c.fillRect(0,floorY,W,H-floorY);
+  // el jugador: vemos su cara y su pantalla con código
+  cafePatron(c,Math.round(W*0.46),floorY-6,t,L.editor);
+}
+/* ===== Escena 2: el personaje camina a la oficina (calle, atardecer vivo) ===== */
 function drawCommuteScene(c,o,t){
   var W=o.W,H=o.H,i,ground=Math.round(H*0.78);
-  var sky=c.createLinearGradient(0,0,0,ground);sky.addColorStop(0,"#20263f");sky.addColorStop(.6,"#3b2e52");sky.addColorStop(1,"#5a3a52");c.fillStyle=sky;c.fillRect(0,0,W,ground);
-  // edificios que se desplazan (parallax)
+  var sky=c.createLinearGradient(0,0,0,ground);sky.addColorStop(0,"#2b3566");sky.addColorStop(.55,"#5b3f7a");sky.addColorStop(1,"#8a4e6e");c.fillStyle=sky;c.fillRect(0,0,W,ground);
+  c.fillStyle="rgba(255,200,150,.5)";c.beginPath();c.arc(Math.round(W*0.72),Math.round(H*0.3),Math.max(5,Math.round(H*0.06)),0,7);c.fill();
   var off=(t*0.8)%40;
-  for(i=-1;i<Math.ceil(W/28)+2;i++){var bx=i*28-off,bh=Math.round(H*(0.2+((i*37)%5)/9)),by=ground-bh;
-    c.fillStyle=(i%2)?"#262a44":"#1e2238";c.fillRect(bx,by,24,bh);
-    c.fillStyle="rgba(255,205,120,.5)";for(var wy=by+3;wy<ground-2;wy+=4)for(var wx=bx+2;wx<bx+22;wx+=4)if((((wx*5+wy*3+i)&0x7fffffff)%3)===0)c.fillRect(wx,wy,2,2);}
-  // acera
-  c.fillStyle="#2a2a32";c.fillRect(0,ground,W,H-ground);c.fillStyle="#3a3a44";c.fillRect(0,ground,W,2);
-  var lo=(t*1.2)%24;c.fillStyle="#4a4a54";for(i=-1;i<Math.ceil(W/24)+1;i++)c.fillRect(i*24-lo,ground+Math.round((H-ground)/2),10,1);
-  // farola con halo
-  var flx=Math.round(W*0.82),fly=ground-Math.round(H*0.28);c.fillStyle="#1a1a22";c.fillRect(flx,fly,2,Math.round(H*0.28));
-  var gg=c.createRadialGradient(flx+1,fly,0,flx+1,fly,16);gg.addColorStop(0,"rgba(255,200,120,.3)");gg.addColorStop(1,"rgba(255,200,120,0)");c.fillStyle=gg;c.fillRect(flx-15,fly-15,32,32);
-  // otro peatón de fondo
-  if(typeof walkerFrames==="function"){var p2=(t*0.5)%(W+40);drawPix(c,walkerFrames(31),"sidew"+(Math.floor(t/4)%8),W+10-p2,ground-40,true);}
-  // el jugador caminando hacia la oficina (derecha)
-  drawPix(c,bgFrames(),"sidew"+(Math.floor(t/3)%8),Math.round(W*0.47),ground-44,false);
+  for(i=-1;i<Math.ceil(W/28)+2;i++){var bx=i*28-off,bh=Math.round(H*(0.22+((i*37)%5)/8)),by=ground-bh;
+    c.fillStyle=(i%2)?"#2e3560":"#262c4e";c.fillRect(bx,by,24,bh);
+    c.fillStyle="rgba(255,210,130,.75)";for(var wy=by+3;wy<ground-2;wy+=4)for(var wx=bx+2;wx<bx+22;wx+=4)if((((wx*5+wy*3+i)&0x7fffffff)%3)===0)c.fillRect(wx,wy,2,2);
+    if(i%3===0){c.fillStyle=["#22d3ee","#f472b6","#5eead4"][((i%3)+5)%3];c.globalAlpha=.6+.4*Math.sin(t*0.1+i);c.fillRect(bx+4,by+4,14,3);c.globalAlpha=1;}}
+  c.fillStyle="#33333e";c.fillRect(0,ground,W,H-ground);c.fillStyle="#44444f";c.fillRect(0,ground,W,2);
+  var lo=(t*1.2)%24;c.fillStyle="#54545e";for(i=-1;i<Math.ceil(W/24)+1;i++)c.fillRect(i*24-lo,ground+Math.round((H-ground)/2),10,1);
+  var flx=Math.round(W*0.88),fly=ground-Math.round(H*0.3);c.fillStyle="#1a1a22";c.fillRect(flx,fly,2,Math.round(H*0.3));
+  var gg=c.createRadialGradient(flx+1,fly,0,flx+1,fly,18);gg.addColorStop(0,"rgba(255,210,140,.45)");gg.addColorStop(1,"rgba(255,210,140,0)");c.fillStyle=gg;c.fillRect(flx-17,fly-17,36,36);
+  // varios peatones
+  if(typeof walkerFrames==="function"){var lanes=[[31,0.5,true],[48,0.35,true],[62,0.7,false]];
+    for(i=0;i<lanes.length;i++){var sp=lanes[i][1],p2=(t*sp+i*120)%(W+60),px2=lanes[i][2]?(W+20-p2):(p2-30);drawPix(c,walkerFrames(lanes[i][0]),"sidew"+(Math.floor(t/4+i)%8),px2,ground-40,lanes[i][2]);}}
+  // el jugador caminando a la oficina (derecha)
+  drawPix(c,bgFrames(),"sidew"+(Math.floor(t/3)%8),Math.round(W*0.46),ground-44,false);
 }
-/* ===== Escena 3: el personaje trabajando en la oficina ===== */
+/* un escritorio: 1 persona (con 2 monitores código+dashboard) o 2 personas (pair programming, pantalla compartida) */
+function officeDesk(c,cx,baseY,t,frA,frB,ed){
+  if(frB){drawPix(c,frA,idleKey("down",t+cx),cx-21,baseY-40,false);drawPix(c,frB,idleKey("down",t+cx+30),cx+1,baseY-40,false);}
+  else drawPix(c,frA,idleKey("down",t+cx),cx-16,baseY-40,false);
+  c.fillStyle="#2f3744";c.fillRect(cx-28,baseY-2,56,4);c.fillStyle="#1f2530";c.fillRect(cx-28,baseY+2,56,2);
+  var mw=24,mh=16,ly=baseY-4-mh,i;
+  if(ed){
+    var lx=cx-26;c.fillStyle="#0c0f14";c.fillRect(lx-1,ly-1,mw+2,mh+2);c.fillStyle="#0e1420";c.fillRect(lx,ly,mw,mh);c.fillStyle="#141b28";c.fillRect(lx,ly,mw,2);drawCodeScreen(c,ed,t,lx+2,ly+3,mw-4,mh-4);c.fillStyle="rgba(130,180,255,.1)";c.fillRect(lx-1,ly-3,mw+2,3);
+    var m2x=cx+2;c.fillStyle="#0c0f14";c.fillRect(m2x-1,ly-1,mw+2,mh+2);c.fillStyle="#0e1726";c.fillRect(m2x,ly,mw,mh);c.fillStyle="#141b28";c.fillRect(m2x,ly,mw,2);
+    for(i=0;i<6;i++){var bw3=Math.round((mw-4)/6),bh3=Math.round((mh-6)*(0.3+0.6*Math.abs(Math.sin(t*0.1+i*0.7))));c.fillStyle=["#34d399","#60a5fa","#f472b6"][i%3];c.fillRect(m2x+2+i*bw3,ly+mh-2-bh3,bw3-1,bh3);}
+    c.fillStyle="rgba(130,255,200,.1)";c.fillRect(m2x-1,ly-3,mw+2,3);
+  } else {
+    var sx=cx-13,sw=26;c.fillStyle="#0c0f14";c.fillRect(sx-1,ly-1,sw+2,mh+2);c.fillStyle="#0e1420";c.fillRect(sx,ly,sw,mh);c.fillStyle="#141b28";c.fillRect(sx,ly,sw,2);
+    for(i=0;i<4;i++){c.fillStyle=["#82aaff","#c3e88d","#c792ea","#f78c6c"][(cx+i)%4];c.fillRect(sx+2,ly+3+i*3,Math.round((sw-4)*(0.4+0.5*Math.abs(Math.sin(t*0.1+cx+i)))),1);}
+    c.fillStyle="rgba(130,180,255,.1)";c.fillRect(sx-1,ly-3,sw+2,3);
+  }
+}
+/* ===== Escena 3: la oficina (equipo colaborando, luminosa) ===== */
 function drawOfficeScene(c,o,t){
-  var W=o.W,H=o.H,deskY=Math.round(H*0.66),i;
-  var wall=c.createLinearGradient(0,0,0,deskY);wall.addColorStop(0,"#16202e");wall.addColorStop(1,"#101824");c.fillStyle=wall;c.fillRect(0,0,W,deskY);
-  // ventanas de día
-  var wy=Math.round(H*0.08),wh=Math.round(H*0.24);
-  for(i=0;i<3;i++){var wx=Math.round(W*(0.58+i*0.14)),ww=Math.round(W*0.12);c.fillStyle="#2b3a52";c.fillRect(wx,wy,ww,wh);
-    var sky=c.createLinearGradient(0,wy,0,wy+wh);sky.addColorStop(0,"#6ea0c8");sky.addColorStop(1,"#9fb8cf");c.fillStyle=sky;c.fillRect(wx+1,wy+1,ww-2,wh-2);
-    c.fillStyle="#3a4a63";for(var b2=0;b2<ww-2;b2+=3){var bh2=5+((b2*5)%7);c.fillRect(wx+1+b2,wy+wh-bh2,2,bh2);}}
-  // pizarra blanca
-  c.fillStyle="#e8edf2";c.fillRect(Math.round(W*0.08),Math.round(H*0.14),Math.round(W*0.18),Math.round(H*0.14));
-  c.fillStyle="#2b6cb0";for(i=0;i<3;i++)c.fillRect(Math.round(W*0.1),Math.round(H*0.17)+i*4,Math.round(W*0.12*(i%2?0.6:1)),1);
-  // compañeros NPC en escritorios (de espaldas)
-  if(typeof walkerFrames==="function")for(i=0;i<2;i++){var dx=Math.round(W*(0.18+i*0.16)),dy=Math.round(H*0.4);
-    drawPix(c,walkerFrames(100+i*7),idleKey("up",t+i*30),dx,dy,false);
-    c.fillStyle="#1b2636";c.fillRect(dx-3,dy+30,Math.round(W*0.11),3);
-    c.fillStyle="#0e1726";c.fillRect(dx+6,dy+18,Math.round(W*0.05),Math.round(H*0.05));c.fillStyle="rgba(130,180,255,.1)";c.fillRect(dx+6,dy+16,Math.round(W*0.05),2);}
+  var W=o.W,H=o.H,floorY=Math.round(H*0.72),i,wf=(typeof walkerFrames==="function");
+  var wall=c.createLinearGradient(0,0,0,floorY);wall.addColorStop(0,"#26384f");wall.addColorStop(1,"#1a2636");c.fillStyle=wall;c.fillRect(0,0,W,floorY);
+  // ventanas de día grandes y brillantes
+  var wy=Math.round(H*0.06),wh=Math.round(H*0.2);
+  for(i=0;i<5;i++){var wx=Math.round(W*(0.04+i*0.2)),ww=Math.round(W*0.16);if(wx+ww>W)break;c.fillStyle="#3a4a63";c.fillRect(wx,wy,ww,wh);
+    var s=c.createLinearGradient(0,wy,0,wy+wh);s.addColorStop(0,"#8fc0e0");s.addColorStop(1,"#bcd4e6");c.fillStyle=s;c.fillRect(wx+1,wy+1,ww-2,wh-2);
+    c.fillStyle="#5a7290";for(var b2=0;b2<ww-2;b2+=3){var bh2=5+((b2*5)%7);c.fillRect(wx+1+b2,wy+wh-bh2,2,bh2);}}
+  // pizarra con diagrama (nodos y flechas = algoritmos) + presentador
+  var pbx=Math.round(W*0.34),pby=Math.round(H*0.3),pbw=Math.round(W*0.18),pbh=Math.round(H*0.15);
+  c.fillStyle="#eef3f7";c.fillRect(pbx,pby,pbw,pbh);
+  c.fillStyle="#2b6cb0";c.fillRect(pbx+6,pby+5,4,4);c.fillRect(pbx+pbw-12,pby+4,4,4);c.fillRect(pbx+Math.round(pbw/2),pby+pbh-8,4,4);
+  c.fillStyle="#9aa6b2";c.fillRect(pbx+9,pby+7,Math.round(pbw/2)-10,1);c.fillRect(pbx+Math.round(pbw/2)+1,pby+9,1,pbh-16);
+  c.fillStyle="#e05252";c.fillRect(pbx+4,pby+pbh-4,Math.round(pbw*0.5),1);
+  if(wf)drawPix(c,walkerFrames(55),idleKey("side",t),pbx-15,pby+pbh-14,false);
   // piso
-  var fl=c.createLinearGradient(0,deskY,0,H);fl.addColorStop(0,"#1f2530");fl.addColorStop(1,"#141922");c.fillStyle=fl;c.fillRect(0,deskY,W,H-deskY);
-  // el jugador de espaldas en su escritorio
-  var px=Math.round(W*0.47);
-  drawPix(c,bgFrames(),idleKey("up",t),px,deskY-44,false);
-  var tY=deskY-10;c.fillStyle="#2a2f3a";c.fillRect(Math.round(W*0.3),tY,Math.round(W*0.42),4);c.fillStyle="#1b1f28";c.fillRect(Math.round(W*0.3),tY+4,Math.round(W*0.42),2);
-  // dos monitores (vista trasera: su luz rebota)
-  var mw=Math.round(W*0.11),mh=Math.round(H*0.14),my=tY-mh-1;
-  c.fillStyle="#0c0f14";c.fillRect(px-mw-2,my,mw,mh);c.fillStyle="rgba(130,180,255,.12)";c.fillRect(px-mw-2,my-2,mw,3);
-  c.fillStyle="#0c0f14";c.fillRect(px+8,my,mw,mh);c.fillStyle="rgba(130,255,200,.12)";c.fillRect(px+8,my-2,mw,3);
-  // café
-  var ccx=Math.round(W*0.66),ccy=tY-6;c.fillStyle="#e8e2d6";c.fillRect(ccx,ccy,6,5);c.fillStyle="#5a3a22";c.fillRect(ccx+1,ccy+1,4,2);cafeSteamCurl(c,ccx+2,ccy,t,1,"rgba(230,225,215,");
+  var fl=c.createLinearGradient(0,floorY,0,H);fl.addColorStop(0,"#2a313e");fl.addColorStop(1,"#1a212c");c.fillStyle=fl;c.fillRect(0,floorY,W,H-floorY);
+  // pair programming (dos compañeros, pantalla compartida)
+  officeDesk(c,Math.round(W*0.14),floorY-6,t,wf?walkerFrames(101):null,wf?walkerFrames(102):null,null);
+  // el jugador en su escritorio (código + dashboard de frente)
+  officeDesk(c,Math.round(W*0.52),floorY-6,t,bgFrames(),null,o.editor);
+  // planta + café para llenar
+  c.fillStyle="#b4612f";c.fillRect(Math.round(W*0.76),floorY-6,5,5);c.fillStyle="#3f9d5a";c.fillRect(Math.round(W*0.76)+1,floorY-11,1,5);c.fillRect(Math.round(W*0.76)+3,floorY-12,1,6);
+  var ccx=Math.round(W*0.86),ccy=floorY-8;c.fillStyle="#e8e2d6";c.fillRect(ccx,ccy,6,5);c.fillStyle="#5a3a22";c.fillRect(ccx+1,ccy+1,4,2);cafeSteamCurl(c,ccx+2,ccy,t,1,"rgba(230,225,215,");
 }
 /* ===== Director: alterna escenas con fundido a negro ===== */
 function drawTitleBg(c,t){
