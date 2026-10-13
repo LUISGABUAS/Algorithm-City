@@ -471,6 +471,16 @@ body.touch .pad,body.touch .abtn{display:block}
 .opt.bad{background:#4a1a1a;box-shadow:inset 0 -4px 0 #321010,0 0 0 2px var(--bad)}
 .opt.bad .k{background:var(--bad)}
 .opt:disabled{cursor:default}
+.remind{margin:10px 0;border:2px solid var(--line2);background:#161f3f}
+.remind>summary{cursor:pointer;list-style:none;padding:9px 12px;font-size:14px;color:#cfe0ff;background:#1b2550}
+.remind>summary::-webkit-details-marker{display:none}
+.remind[open]>summary{border-bottom:2px solid var(--line2)}
+.rmcard{padding:10px 12px;display:grid;gap:5px}
+.rmcard+.rmcard{border-top:1px solid var(--line)}
+.rmcard>b{font-family:"Pixelify Sans",system-ui,sans-serif;font-size:16px;color:var(--mint)}
+.rmcard>span{font-size:13px;color:var(--dim)}
+.rmout{font:12px ui-monospace,Menlo,monospace;color:#9fe0c4;margin-top:-2px}
+.rmcard .rmgo{justify-self:start;margin-top:4px}
 .why{margin-top:12px;background:#141b38;border:3px solid var(--ol);box-shadow:0 0 0 2px var(--line2);padding:12px 14px;font-size:16px}
 .why .t{font-family:Silkscreen;font-size:12px;color:var(--mint);margin-bottom:4px}
 .why a{color:var(--mint)}
@@ -938,11 +948,13 @@ function drawStage(mood){
 }
 function showCase(){
   stop();document.body.classList.remove("bmode");var c=RUN.list[RUN.i],r=curRoom(),n=npcOf();RUN.left=TIME;RUN.answered=false;
+  var RM=(RUN.mode==="room"&&typeof remediationFor==="function")?remediationFor(roomConcepts(r,c)):[];
   var title=RUN.mode==="exam"?"<small>AULA MAGNA · "+esc(WORLDS[RUN.w].nm)+"</small>Examen de acreditación":"<small>"+esc(WORLDS[RUN.w].nm)+" · "+(RUN.f===0?"PLANTA BAJA":"PISO "+RUN.f)+" · SALA "+String(r.idx+1).padStart(3,"0")+"</small>"+esc(r.con?r.nm:("#"+r.n+" · "+r.nm));
   var dots="";for(var k=0;k<RUN.list.length;k++)dots+='<i class="'+(RUN.res[k]===true?"ok":RUN.res[k]===false?"bad":(k===RUN.i?"cur":""))+'"></i>';
   var h='<div class="case"><div class="ctop"><button class="pbtn" id="bk" title="Salir (Esc)">✕ '+(RUN.mode==="exam"?"ABANDONAR EXAMEN":"SALIR DE LA SALA")+'</button><div class="ctitle">'+title+'</div><div class="dots">'+dots+'</div></div>'
     +'<div class="cgrid"><div class="cl"><div class="stage" id="stage"><canvas id="stagec" width="160" height="112"></canvas><div class="tbox"><div class="tbar"><i id="tb" style="width:100%"></i></div><span class="tnum" id="tm">'+TIME+'s</span></div></div></div><div class="cside">'
     +'<div class="dlg" id="dlg"><canvas id="por" width="32" height="32"></canvas><div style="flex:1;min-width:0"><div class="nm">'+esc(n.name)+' · '+esc(n.role)+'</div><div class="say" id="say"></div></div></div>'
+    +(RM.length?remindBar(RM):"")
     +(c.code?'<pre class="code">'+hl(c.code)+'</pre>':'')+'<div class="ohint" id="ohint">'+(document.body.classList.contains("touch")?'👇 Toca una respuesta':'👇 Elige una respuesta · teclas A–D · Esc para salir')+'</div><div class="opts" id="opts">';
   c.opts.forEach(function(o,i){h+='<button class="opt" data-i="'+i+'"><span class="k">'+"ABCD"[i]+'</span><span>'+esc(o)+'</span></button>'});
   h+='</div><div id="after"></div></div></div></div>';
@@ -953,6 +965,7 @@ function showCase(){
   $("dlg").onclick=finishType;
   $("bk").onclick=function(){stop();if(RUN.mode==="exam"&&!confirmLeave())return;var w=RUN.w,f=RUN.f;RUN=null;fadeTo(function(){building(w,f)})};
   [].forEach.call(document.querySelectorAll(".opt"),function(b){b.onclick=function(){answer(+b.dataset.i)}});
+  if(RM.length&&typeof wireRemind==="function")wireRemind(document);
   tick=setInterval(function(){RUN.left--;var tb=$("tb"),tm=$("tm");if(!tb){stop();return}
     tb.style.width=(Math.max(0,RUN.left)/TIME*100)+"%";tb.className=RUN.left<=20?"low":"";tm.textContent=Math.max(0,RUN.left)+"s";
     if(RUN.left<=0)answer(-1)},1000);
@@ -978,6 +991,7 @@ function answer(i){
     +'<div class="why"><div class="t">📘 EXPLICACIÓN</div>'+esc(c.why)
     +(c.sl?' <a target="_blank" rel="noopener" href="https://leetcode.com/problems/'+encodeURIComponent(c.sl)+'/">Abrir en LeetCode ↗</a>':'')+'</div>';
   $("nx").onclick=next;var oh=$("ohint");if(oh)oh.textContent=document.body.classList.contains("touch")?"✔ Lee la explicación y toca Siguiente":"✔ Lee la explicación y presiona Siguiente (Enter)";
+  if(!ok&&RUN.mode==="room"&&typeof remediationFor==="function"){var _rm=remediationFor(roomConcepts(curRoom(),c));if(_rm.length){$("after").insertAdjacentHTML("beforeend",remindBar(_rm));wireRemind($("after"))}}
   setTimeout(function(){var nx=$("nx");if(nx&&nx.getBoundingClientRect().bottom>window.innerHeight)nx.scrollIntoView({behavior:"smooth",block:"end"})},250);
 }
 function next(){if(!RUN||!RUN.answered)return;if(RUN.i<RUN.list.length-1){RUN.i++;showCase()}else result()}

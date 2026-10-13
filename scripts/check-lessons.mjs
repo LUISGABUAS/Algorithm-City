@@ -17,5 +17,24 @@ for (const k in LESSONS) for (const les of LESSONS[k]) {
     prev = s.solution;
   });
 }
+// --- conceptos y repaso de prerrequisitos ---
+const { CONCEPTS, PATTERN2CONCEPT, LESSON_CONCEPTS } =
+  new Function(readFileSync("src/js/concepts.js", "utf8") + ";return {CONCEPTS,PATTERN2CONCEPT,LESSON_CONCEPTS}")();
+const lessonIds = new Set();
+for (const k in LESSONS) for (const les of LESSONS[k]) lessonIds.add(les.id);
+let cbad = 0;
+for (const id in CONCEPTS) {
+  const C = CONCEPTS[id];
+  if (!C.nm || !C.blurb || !C.ex || typeof C.ex.code !== "string") { cbad++; console.log("✗ concepto incompleto:", id); }
+  if (C.ref && !lessonIds.has(C.ref)) { cbad++; console.log("✗ ref de concepto inexistente:", id, "->", C.ref); }
+}
+for (const p in PATTERN2CONCEPT) for (const c of PATTERN2CONCEPT[p])
+  if (!CONCEPTS[c]) { cbad++; console.log("✗ PATTERN2CONCEPT usa concepto inexistente:", p, "->", c); }
+for (const lid in LESSON_CONCEPTS) {
+  if (!lessonIds.has(lid)) { cbad++; console.log("✗ LESSON_CONCEPTS: clase inexistente:", lid); }
+  for (const c of LESSON_CONCEPTS[lid]) if (!CONCEPTS[c]) { cbad++; console.log("✗ LESSON_CONCEPTS usa concepto inexistente:", lid, "->", c); }
+}
+console.log(`${Object.keys(CONCEPTS).length} conceptos revisados · ${cbad} con problemas`);
+
 console.log(`${n} ejercicios revisados · ${bad} con problemas`);
-process.exit(bad ? 1 : 0);
+process.exit(bad + cbad ? 1 : 0);

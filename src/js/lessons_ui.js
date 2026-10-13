@@ -95,7 +95,7 @@ function showLesson(){
       +(EXX=withPass(s,stepCode(LES.i)),EXX.length?'<details class="expl"'+(passFirst(s,stepCode(LES.i))?' open':'')+'><summary>📖 ¿Qué hace cada parte?</summary>'+EXX.map(function(p){return '<div><code>'+esc(p[0])+'</code><span>'+esc(p[1])+'</span></div>'}).join("")+'</details>':'')
       +'<div id="edhost"></div>'
       +'<div class="edbar"><button class="pbtn mint" id="run">▶ EJECUTAR</button>'+(s.hints?'<button class="pbtn" id="hint">💡 PISTA</button>':'')+'<button class="pbtn" id="reset" title="Volver al código inicial">↺</button><button class="pbtn" id="scaf" hidden title="Te doy el esqueleto del código con huecos ___ para completar">🧩 DAME LA ESTRUCTURA</button><button class="pbtn" id="sol" hidden>👀 VER SOLUCIÓN</button><span class="edkeys">Ctrl/⌘ + Enter ejecuta · Tab = 4 espacios</span></div>'
-      +'<div id="hints"></div><div id="results"></div>';
+      +'<div id="hints"></div><div id="results"></div><div id="lremind"></div>';
   }
   $("lbody").innerHTML=body;
   typeInto($("say"),LES.testout?"⚡ Reto directo (si pasa, la clase cuenta como vista). "+((L.steps.filter(function(x){return x.k==="talk"})[0]||{}).text||""):(s.k==="check"?s.q:s.text));
@@ -156,6 +156,7 @@ h+=testsHTML(r);
     else if(fails===2&&lv<2&&SC){typeInto($("say"),"Vamos juntos: toca 🧩 DAME LA ESTRUCTURA y te dejo el esqueleto con huecos para completar.")}
     else if(runs>=2&&s.hints&&shown===0&&runs>=hintAfter){typeInto($("say"),"Si te atoras, usa una 💡 pista. No es trampa: así aprenden los profesionales.")}
     scafBtn();
+    if(!r.ok&&fails>=2&&typeof remediationFor==="function"&&$("lremind")&&!$("lremind").innerHTML){var _rm=remediationFor(lessonConcepts(LES.L));if(_rm.length){$("lremind").innerHTML=remindBar(_rm);wireRemind($("lremind"))}}
     if(r.ok&&LES.testout){LES.ok[i]=1;nx.disabled=false;typeInto($("say"),"⚡ ¡Reto superado! Presiona TERMINAR CLASE para darla por vista.")}
     setTimeout(function(){var el=nx.disabled?box:nx;if(el&&el.getBoundingClientRect().bottom>innerHeight)el.scrollIntoView({behavior:"smooth",block:"end"})},60);
   }

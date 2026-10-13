@@ -10,6 +10,7 @@ const LESSONS = [
   "lessons_basic",  // clases desde cero para principiantes
   "lessons_core",   // resaltado de código y pizarrón animado
   "lessons_ui",     // editor, pruebas y pantallas de clase
+  "concepts",       // conceptos y repaso just-in-time de prerrequisitos
   "adapt",          // niveles de experiencia, glosario, reto directo
   "avatar",         // Vestidores y Camino de niveles
   "chibi",          // dibujo de personajes 32x48 y animaciones
