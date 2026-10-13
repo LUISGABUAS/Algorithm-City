@@ -138,12 +138,14 @@ function cloudTitleHtml(){
     return '<div class="tcloud ok"><span>☁️ Sesión iniciada como <b>'+esc(st.email||"tu cuenta")+'</b> · tu avance se guarda en la nube</span>'
       +'<div class="trow"><button class="pbtn" id="tsync">☁️ Sincronizar ahora</button><button class="pbtn" id="tout">Cerrar sesión</button></div></div>';
   var provs=(typeof CLOUD_PROVIDERS!=="undefined")?CLOUD_PROVIDERS:["github"];
+  var req=(typeof REQUIRE_LOGIN!=="undefined"&&REQUIRE_LOGIN);
   var btns="";
   if(provs.indexOf("google")>=0)btns+='<button class="pbtn tsocial" id="tgoog">🔵 Continuar con <b>Google</b></button>';
   if(provs.indexOf("github")>=0)btns+='<button class="pbtn tsocial" id="tgh">⚫ Continuar con <b>GitHub</b></button>';
-  return '<div class="tcloud"><div class="tcldh">Guarda tu avance en la nube</div>'
+  return '<div class="tcloud">'
+    +(req?'':'<div class="tcldh">Guarda tu avance en la nube</div>')
     +'<div class="trow">'+btns+'</div>'
-    +'<small>Opcional: entra desde cualquier dispositivo y sigue donde lo dejaste. También puedes jugar sin cuenta.</small></div>';
+    +'<small>'+(req?'Entra para empezar. Tu avance se guarda en la nube y puedes seguir desde cualquier dispositivo.':'Opcional: entra desde cualquier dispositivo y sigue donde lo dejaste. También puedes jugar sin cuenta.')+'</small></div>';
 }
 function cloudTitleBind(){
   if($("tgoog"))$("tgoog").onclick=function(){cloudSignIn("google")};
