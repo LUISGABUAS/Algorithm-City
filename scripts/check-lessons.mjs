@@ -1,7 +1,7 @@
 // Verifica que la solución de cada ejercicio pase sus pruebas y que el código inicial NO las pase.
 import { readFileSync } from "node:fs";
 const MiniPy = new Function(readFileSync("src/js/minipy.js", "utf8") + ";return MiniPy")();
-const src = readFileSync("src/js/lessons_data.js", "utf8") + readFileSync("src/js/lessons_basic.js", "utf8");
+const src = readFileSync("src/js/lessons_data.js", "utf8") + readFileSync("src/js/lessons_basic.js", "utf8") + readFileSync("src/js/lessons_w2.js", "utf8");
 const LESSONS = new Function(src + ";return LESSONS")();
 
 let n = 0, bad = 0;
@@ -36,15 +36,17 @@ for (const lid in LESSON_CONCEPTS) {
 }
 console.log(`${Object.keys(CONCEPTS).length} conceptos revisados · ${cbad} con problemas`);
 
-// --- retos de producción del Mundo 1 ---
-const CHW1 = new Function(readFileSync("src/js/challenges_w1.js", "utf8") + ";return CHALLENGES_W1")();
+// --- retos de producción (Mundos 1 y 2) ---
+const chSrc = readFileSync("src/js/challenges_w1.js", "utf8") + readFileSync("src/js/challenges_w2.js", "utf8");
+const { CHALLENGES_W1, CHALLENGES_W2 } = new Function(chSrc + ";return {CHALLENGES_W1, CHALLENGES_W2}")();
+const ALLCH = { ...CHALLENGES_W1, ...CHALLENGES_W2 };
 let wn = 0, wbad = 0;
 const out1 = (code) => { const r = MiniPy.runTests(code, []); return { out: r.out || "", err: !!r.error }; };
 const broken = (flawed, ref, cand) => {
   const a = out1(flawed + "\nprint(" + cand + ")"), b = out1(ref + "\nprint(" + cand + ")");
   return a.err || a.out !== b.out;
 };
-for (const wk in CHW1) for (const c of CHW1[wk]) {
+for (const wk in ALLCH) for (const c of ALLCH[wk]) {
   wn++;
   const fail = (m) => { wbad++; console.log("✗", wk, c.t, (c.nm||""), "·", m); };
   if (c.t === "predict" || c.t === "trace") { if (MiniPy.runTests(c.code, []).error) fail("el código no corre"); }
@@ -54,7 +56,7 @@ for (const wk in CHW1) for (const c of CHW1[wk]) {
   else if (c.t === "edge") { const nb = c.candidates.filter((q) => broken(c.flawed, c.ref, q)).length; if (nb !== 1) fail(`debe romperse exactamente 1 candidato, se rompen ${nb}`); }
   else if (c.t === "pat" || c.t === "cx") { if (!c.opts || c.ok == null || c.ok < 0 || c.ok >= c.opts.length || !c.why) fail("opción múltiple mal formada"); }
 }
-console.log(`${wn} retos del Mundo 1 revisados · ${wbad} con problemas`);
+console.log(`${wn} retos de producción revisados · ${wbad} con problemas`);
 
 console.log(`${n} ejercicios revisados · ${bad} con problemas`);
 process.exit(bad + cbad + wbad ? 1 : 0);

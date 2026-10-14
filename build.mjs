@@ -8,11 +8,13 @@ const MAP = ["map", "city", "srs"];                 // mapa, ciudad, repaso espa
 const LESSONS = [
   "lessons_data",   // contenido de las clases (Mundo 1)
   "lessons_basic",  // clases desde cero para principiantes
+  "lessons_w2",     // clases del Mundo 2 (Puerto Hash)
   "lessons_core",   // resaltado de código y pizarrón animado
   "lessons_ui",     // editor, pruebas y pantallas de clase
   "concepts",       // conceptos y repaso just-in-time de prerrequisitos
   "challenge",      // motor de retos por producción (predecir, parsons, escribir…)
   "challenges_w1",  // contenido de retos del Mundo 1 (reemplaza sus MCQ)
+  "challenges_w2",  // contenido de retos del Mundo 2 (Puerto Hash)
   "adaptive",       // dificultad adaptativa (regla del 85%)
   "adapt",          // niveles de experiencia, glosario, reto directo
   "avatar",         // Vestidores y Camino de niveles

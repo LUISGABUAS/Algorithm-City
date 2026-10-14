@@ -46,7 +46,11 @@ var LESSON_CONCEPTS={
  rev2sum:["dict","enumerate","bigo"],
  lcp:["string","index","forloop"],
  profit:["accumulator","bigo","forloop"],
- palin:["twoptr","string"]
+ palin:["twoptr","string"],
+ hashmap2:["dict","dict_get","bigo","forloop"],
+ twoptr2:["twoptr","bigo"],
+ window2:["window","dict","bigo"],
+ prefix2:["prefix","dict","bigo"]
 };
 function lessonConcepts(L){return (L&&(L.concepts||LESSON_CONCEPTS[L.id]))||[]}
 
