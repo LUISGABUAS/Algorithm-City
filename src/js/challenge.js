@@ -31,7 +31,8 @@ function playChallenge(c,host,onGraded,say){
   var goal={write:["⌨️ ESCRIBE",c.goal||"Escribe la solución y pasa todas las pruebas."],
             blanks:["🧩 COMPLETA",c.goal||"Rellena los huecos ___ y ejecuta."],
             debug:["🐞 ARREGLA EL BUG",c.goal||"Hay un error. Encuéntralo y corrígelo hasta que pasen las pruebas."]}[t];
-  return chCode(c,host,grade,say,{starter:starter,tests:c.tests,hints:hints,solution:sol,goalLabel:goal[0],goalText:goal[1],giveUpAfter:t==="write"?3:2});
+  var gu=(typeof adaptHintGiveUp==="function")?adaptHintGiveUp():(t==="write"?3:2);
+  return chCode(c,host,grade,say,{starter:starter,tests:c.tests,hints:hints,solution:sol,goalLabel:goal[0],goalText:goal[1],giveUpAfter:gu});
 }
 
 /* ---------- editor + pruebas (write / blanks / debug) ---------- */

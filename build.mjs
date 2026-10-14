@@ -13,6 +13,7 @@ const LESSONS = [
   "concepts",       // conceptos y repaso just-in-time de prerrequisitos
   "challenge",      // motor de retos por producción (predecir, parsons, escribir…)
   "challenges_w1",  // contenido de retos del Mundo 1 (reemplaza sus MCQ)
+  "adaptive",       // dificultad adaptativa (regla del 85%)
   "adapt",          // niveles de experiencia, glosario, reto directo
   "avatar",         // Vestidores y Camino de niveles
   "chibi",          // dibujo de personajes 32x48 y animaciones

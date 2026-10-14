@@ -598,7 +598,7 @@ var WORLDS=[
   {ico:"🛠️",nm:"Taller",d:"Git, pruebas y buenas prácticas"},
   {ico:"🗼",nm:"Torre",d:"Entrevistas y casos difíciles"}
 ];
-var TIME=120,EXAM_N=10,EXAM_PASS=7;
+var TIME=120,EXAM_N=10,EXAM_PASS=8;
 var KEY="algorithm-city-v2";
 
 function load(){
@@ -938,7 +938,7 @@ var BADL=["Mmm… no creo que sea eso.","Uy, eso no termina de cuadrar.","Casi�
 var JURY=[{name:"Dra. Ruiz",role:"Jurado"},{name:"Ing. Chen",role:"Jurado"},{name:"Lic. Ortega",role:"Jurado"},{name:"Mtra. Silva",role:"Jurado"}];
 function openRoom(w,f,i){
   var r=floorData(w,f).rooms[i];ST.played[r.id]=1;ST.cur[w]=f;save();
-  RUN={mode:"room",w:w,f:f,room:r,list:r.cases.slice(),i:0,score:0,xp:0,coins:0,res:[]};
+  RUN={mode:"room",w:w,f:f,room:r,list:(typeof adaptRoomList==="function"?adaptRoomList(r):r.cases.slice()),i:0,score:0,xp:0,coins:0,res:[]};
   fadeTo(showCase);
 }
 function openExam(w){
@@ -1006,7 +1006,7 @@ function answerCore(ok,i){
   RUN.answered=true;if(tick){clearInterval(tick);tick=null}finishType();
   var c=RUN.list[RUN.i],first=!ST.solved[c._id],before=levelInfo(),prod=(typeof isProdChallenge==="function"&&isProdChallenge(c.t));
   var xp=ok?(prod?(first?30:8):(first?25:5)+(RUN.left>=90?5:0)):(i<0?0:3),coins=ok&&first?(prod?12:10):0;
-  ST.att=(ST.att||0)+1;srsCase(c,ok);if(ok){ST.solved[c._id]=1;ST.streak=(ST.streak||0)+1;ST.hits=(ST.hits||0)+1;RUN.score++;if(ST.streak>(ST.bestStreak||0))ST.bestStreak=ST.streak}else ST.streak=0;
+  ST.att=(ST.att||0)+1;srsCase(c,ok);if(typeof adaptRecord==="function")adaptRecord(ok);if(ok){ST.solved[c._id]=1;if(prod&&typeof creditEasier==="function")creditEasier(c);ST.streak=(ST.streak||0)+1;ST.hits=(ST.hits||0)+1;RUN.score++;if(ST.streak>(ST.bestStreak||0))ST.bestStreak=ST.streak}else ST.streak=0;
   ST.xp+=xp;ST.coins=(ST.coins||0)+coins;RUN.xp+=xp;RUN.coins+=coins;RUN.res[RUN.i]=ok;save();hud();
   var after=levelInfo();if(after.lv>before.lv)setTimeout(function(){toast(after.capped?"¡Nivel "+after.lv+"! Es el máximo de este mundo: acredita el edificio para seguir subiendo":"¡Subiste a nivel "+after.lv+"!")},700);
   drawStage(ok?"ok":"bad");
