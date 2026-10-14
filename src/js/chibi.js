@@ -70,7 +70,9 @@ function chibi(a,view,P){P=P||{};
   function arm(x,y,len){var sl=sleeveLong?len:3;rect(x,y,3,sl,top.c);rect(x+2,y,1,sl,top.d);if(!sleeveLong){rect(x,y+3,3,len-3,s1);rect(x+2,y+3,1,len-3,s2)}rect(x,y+len,3,2,s1);px(x+2,y+len+1,s2)}
   var armTop=a.top===4?under:null;
   if(D||U){arm(6,ty+1+armA,9);arm(23,ty+1+armB,9);var sep=darken(top.c,.4);rect(9,ty+3,1,8,sep);rect(22,ty+3,1,8,sep)}
-  else{var ax=14+(P.ax||0);arm(ax,ty+1,9);rect(ax+3,ty+1,1,9,top.d);rect(ax-1,ty+3,1,7,darken(top.c,.4))}
+  else{var ax=14+(P.ax||0),axB=9-(P.ax||0);
+    rect(axB,ty+2,3,7,darken(top.c,.32));rect(axB,ty+9,3,2,darken(s1,.18)); // brazo de atrás (más oscuro, da profundidad)
+    arm(ax,ty+1,9);rect(ax+3,ty+1,1,9,top.d);rect(ax-1,ty+3,1,7,darken(top.c,.4))}
   if(a.top===4&&(D||U)){/* mangas claras ya por top.c */}
   /* tirantes de mochila (frente) */
   if(a.body===2&&D){rect(11,ty,2,10,k2);rect(19,ty,2,10,k2)}
@@ -127,6 +129,8 @@ function chibi(a,view,P){P=P||{};
     if(U){rrect(hx-1,hy-2,hw+2,10,4,k1);rect(13,hy+6,6,2,k2)}
     if(S){rrect(7,hy-2,20,9,4,k1);rect(7,hy+4,20,3,k1);rect(22,hy+6,8,2,k2)}}
   if(a.head===3){var bx0=S?7:hx-1,bw=S?20:hw+2;rrect(bx0,hy-3,bw,12,5,k1);rect(bx0,hy+6,bw,3,k2);for(var x3=bx0+1;x3<bx0+bw;x3+=2)px(x3,hy+7,darken(k2,.2));ell(S?14:16,hy-4,2,2,"#f8fafc")}
+  /* ---------- inclinación hacia adelante (caminata de lado) ---------- */
+  if(S&&P.lean){var shB=Buf();for(var sy=0;sy<CH;sy++){var off=sy<ly?Math.round(P.lean*(ly-sy)/ly):0;for(var sx=0;sx<CW;sx++){if(B[sy][sx]){var nx2=sx+off;if(nx2>=0&&nx2<CW)shB[sy][nx2]=B[sy][sx]}}}B=shB}
   /* ---------- contorno ---------- */
   var OLc="#1b1b2f",out=Buf();
   for(var y=0;y<CH;y++)for(var x=0;x<CW;x++){if(B[y][x]){out[y][x]=B[y][x];continue}
@@ -140,7 +144,7 @@ function chibiFrames(a){var key=JSON.stringify(a);if(CHC[key])return CHC[key];va
     fr[v+"idle"]=bufCanvas(chibi(a,v,{}));fr[v+"idle1"]=bufCanvas(chibi(a,v,{up:1}));fr[v+"blink"]=bufCanvas(chibi(a,v,{blink:1}));
     WALK8.forEach(function(w){var s=w.s,k=w.k,P;
       var vb=Math.round(Math.abs(Math.cos(k*Math.PI/4))*2); // rebote: cuerpo alto al pasar, bajo al abrir el paso
-      if(v==="side")P={st:Math.round(s*3),ax:Math.round(s*3),up:vb};
+      if(v==="side")P={st:Math.round(s*5),ax:Math.round(s*3),up:vb,lean:2};
       else P={legA:Math.round(Math.max(0,s)*3),legB:Math.round(Math.max(0,-s)*3),armA:Math.round(-s*2)+1,armB:Math.round(s*2)+1,up:vb};
       fr[v+"w"+w.k]=bufCanvas(chibi(a,v,P))});
     fr[v+"a"]=fr[v+"w2"];fr[v+"b"]=fr[v+"w6"]});
