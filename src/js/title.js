@@ -6,7 +6,15 @@ var TITLE_TIPS=[
  "Antes de programar, resuelve un ejemplo a mano en papel.",
  "Los casos límite ganan entrevistas: lista vacía, un elemento, números repetidos.",
  "Di en voz alta lo que piensas: en la entrevista también califican tu razonamiento.",
- "Equivocarte en el editor es gratis. Ejecuta seguido."];
+ "Equivocarte en el editor es gratis. Ejecuta seguido.",
+ "Dormir también es estudiar: lo que no consolidas, no lo recuerdas.",
+ "Hoy no tienes que saberlo todo. Hoy solo tienes que sentarte y empezar.",
+ "No se trata de saberlo todo: se trata de reconocer el problema cuando lo tengas enfrente.",
+ "No compares tu avance con el de nadie. Compáralo con el tuyo de la semana pasada.",
+ "La memoria se construye recordando, no releyendo. Cierra la clase e intenta de memoria.",
+ "Un problema difícil no es una pared: es la señal de que estás creciendo.",
+ "Primero que funcione, luego que sea rápido, al final que sea bonito.",
+ "Los nervios de la entrevista se vencen con repeticiones, no con suerte."];
 function hasSave(){return !!(ST.av||ST.xp>0||Object.keys(ST.lesson||{}).length||Object.keys(ST.solved||{}).length)}
 var TITLE_USER=null;
 function showTitle(){if($("tscreen"))return;HELD=[];

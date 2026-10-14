@@ -36,5 +36,25 @@ for (const lid in LESSON_CONCEPTS) {
 }
 console.log(`${Object.keys(CONCEPTS).length} conceptos revisados · ${cbad} con problemas`);
 
+// --- retos de producción del Mundo 1 ---
+const CHW1 = new Function(readFileSync("src/js/challenges_w1.js", "utf8") + ";return CHALLENGES_W1")();
+let wn = 0, wbad = 0;
+const out1 = (code) => { const r = MiniPy.runTests(code, []); return { out: r.out || "", err: !!r.error }; };
+const broken = (flawed, ref, cand) => {
+  const a = out1(flawed + "\nprint(" + cand + ")"), b = out1(ref + "\nprint(" + cand + ")");
+  return a.err || a.out !== b.out;
+};
+for (const wk in CHW1) for (const c of CHW1[wk]) {
+  wn++;
+  const fail = (m) => { wbad++; console.log("✗", wk, c.t, (c.nm||""), "·", m); };
+  if (c.t === "predict" || c.t === "trace") { if (MiniPy.runTests(c.code, []).error) fail("el código no corre"); }
+  else if (c.t === "parsons") { const r = MiniPy.runTests(c.lines.join("\n"), c.tests); if (!r.ok) fail("el orden correcto no pasa"); }
+  else if (c.t === "write" || c.t === "blanks") { if (!MiniPy.runTests(c.solution, c.tests).ok) fail("la solución falla"); if (c.starter && MiniPy.runTests(c.starter, c.tests).ok) fail("el starter ya pasa"); }
+  else if (c.t === "debug") { if (MiniPy.runTests(c.buggy, c.tests).ok) fail("el buggy NO falla"); if (!MiniPy.runTests(c.solution, c.tests).ok) fail("la solución falla"); }
+  else if (c.t === "edge") { const nb = c.candidates.filter((q) => broken(c.flawed, c.ref, q)).length; if (nb !== 1) fail(`debe romperse exactamente 1 candidato, se rompen ${nb}`); }
+  else if (c.t === "pat" || c.t === "cx") { if (!c.opts || c.ok == null || c.ok < 0 || c.ok >= c.opts.length || !c.why) fail("opción múltiple mal formada"); }
+}
+console.log(`${wn} retos del Mundo 1 revisados · ${wbad} con problemas`);
+
 console.log(`${n} ejercicios revisados · ${bad} con problemas`);
-process.exit(bad + cbad ? 1 : 0);
+process.exit(bad + cbad + wbad ? 1 : 0);
