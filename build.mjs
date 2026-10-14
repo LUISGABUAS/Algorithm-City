@@ -17,6 +17,7 @@ const LESSONS = [
   "title",          // pantalla de inicio
   "settings",       // configuración, música, efectos y voz
   "cloud",          // cuenta y guardado en la nube (Supabase)
+  "proto",          // PROTOTIPO: sala de muestra jugable (#proto)
 ];
 
 const template = readFileSync("src/index.html", "utf8");
