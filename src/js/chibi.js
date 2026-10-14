@@ -143,9 +143,9 @@ function chibiFrames(a){var key=JSON.stringify(a);if(CHC[key])return CHC[key];va
   ["down","up","side"].forEach(function(v){
     fr[v+"idle"]=bufCanvas(chibi(a,v,{}));fr[v+"idle1"]=bufCanvas(chibi(a,v,{up:1}));fr[v+"blink"]=bufCanvas(chibi(a,v,{blink:1}));
     WALK8.forEach(function(w){var s=w.s,k=w.k,P;
-      var vb=Math.round(Math.abs(Math.cos(k*Math.PI/4))*2); // rebote: cuerpo alto al pasar, bajo al abrir el paso
-      if(v==="side")P={st:Math.round(s*5),ax:Math.round(s*3),up:vb,lean:2};
-      else P={legA:Math.round(Math.max(0,s)*3),legB:Math.round(Math.max(0,-s)*3),armA:Math.round(-s*2)+1,armB:Math.round(s*2)+1,up:vb};
+      var vb=Math.round(Math.abs(Math.cos(k*Math.PI/4)));        // rebote sutil (0-1), fase correcta
+      if(v==="side")P={st:Math.round(s*5),ax:Math.round(s*3),up:vb,lean:2};  // vista de lado: zancada amplia + inclinación
+      else P={legA:Math.round(Math.max(0,s)*2),legB:Math.round(Math.max(0,-s)*2),armA:Math.round(-s*1.5)+1,armB:Math.round(s*1.5)+1,up:vb}; // frente/espalda: suave
       fr[v+"w"+w.k]=bufCanvas(chibi(a,v,P))});
     fr[v+"a"]=fr[v+"w2"];fr[v+"b"]=fr[v+"w6"]});
   CHC[key]=fr;return fr}
