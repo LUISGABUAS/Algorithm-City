@@ -32,7 +32,8 @@ function playChallenge(c,host,onGraded,say){
             blanks:["🧩 COMPLETA",c.goal||"Rellena los huecos ___ y ejecuta."],
             debug:["🐞 ARREGLA EL BUG",c.goal||"Hay un error. Encuéntralo y corrígelo hasta que pasen las pruebas."]}[t];
   var gu=(typeof adaptHintGiveUp==="function")?adaptHintGiveUp():(t==="write"?3:2);
-  return chCode(c,host,grade,say,{starter:starter,tests:c.tests,hints:hints,solution:sol,goalLabel:goal[0],goalText:goal[1],giveUpAfter:gu});
+  var intro={write:"Escríbelo tú, de memoria. Si te atoras, pide una 💡 pista: no es trampa, así aprenden los profesionales.",blanks:"Rellena los huecos ___ con lo que falta y presiona ▶ Ejecutar.",debug:"Este código tiene un bug escondido. Léelo con calma, encuéntralo y corrígelo hasta que pasen las pruebas."}[t];
+  return chCode(c,host,grade,say,{starter:starter,tests:c.tests,hints:hints,solution:sol,goalLabel:goal[0],goalText:goal[1],giveUpAfter:gu,intro:intro});
 }
 
 /* ---------- editor + pruebas (write / blanks / debug) ---------- */
@@ -42,6 +43,7 @@ function chCode(c,host,grade,say,o){
     +'<div id="ched"></div>'
     +'<div class="edbar"><button class="pbtn mint" id="chrun">▶ EJECUTAR</button>'+(o.hints&&o.hints.length?'<button class="pbtn" id="chhint">💡 PISTA</button>':'')+'<button class="pbtn" id="chreset" title="Reiniciar">↺</button><button class="pbtn" id="chgive" hidden>Ver solución</button><span class="edkeys">Ctrl/⌘ + Enter ejecuta · Tab = 4 espacios</span></div>'
     +'<div id="chhints"></div><div id="chres"></div>';
+  chSay(say,o.intro||"Escribe tu solución y presiona ▶ Ejecutar.");
   var ed=mountEditor($("ched"),o.starter,function(){},run),HS=o.hints||[];
   function hb(){var b=$("chhint");if(b){b.disabled=shown>=HS.length;b.textContent=shown<HS.length?"💡 PISTA ("+(shown+1)+"/"+HS.length+")":"💡 SIN MÁS PISTAS"}var g=$("chgive");if(g)g.hidden=!(o.solution&&runs>=o.giveUpAfter)}
   if($("chhint"))$("chhint").onclick=function(){if(shown<HS.length){shown++;$("chhints").innerHTML=HS.slice(0,shown).map(function(h,k){return '<div class="hintb"><b>Pista '+(k+1)+'</b> '+esc(h)+'</div>'}).join("");hb()}};
