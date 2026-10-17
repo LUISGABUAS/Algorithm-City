@@ -788,6 +788,12 @@ function diagram(c,t,bx,by,bw,bh,seed){
   else if(t==="interview"){c.fillStyle=ink;c.font="bold 13px monospace";c.textBaseline="top";c.fillText("O(n)?",bx+6,by+4);for(i=0;i<3;i++){R(c,grn,bx+6,by+22+i*6,3,3);R(c,ink,bx+12,by+23+i*6,20+hash(i,seed)%22,1)}}
   else{for(i=0;i<6;i++){var ind=(i===0||i===5)?0:(i%3?6:3);R(c,[pur,blu,ink,grn,org,ink][i],bx+4+ind,by+4+i*6,14+hash(i,seed)%28,2)}}
 }
+function bgWalker(c,seed,t,y,sc){ if(typeof walkerFrames!=="function")return; sc=sc||.8;
+  var fr=walkerFrames(seed), span=200, p=((t*2+seed*13)%span), wx=p-30;
+  var img=fr["sidew"+(Math.floor(t)%8)]||fr.sideidle, w=Math.round(32*sc), h=Math.round(48*sc);
+  disc(c,wx+w/2,y+h-2,Math.round(w*0.3),"rgba(0,0,0,.2)",.35);
+  c.drawImage(img,0,0,32,48,wx,y,w,h);
+}
 function drawRoom(c,r,o){
   o=o||{};var th=THEME[r.w],W=160,i;
   drawBase(c,r.w,r.f);
@@ -815,6 +821,8 @@ function drawRoom(c,r,o){
   var gp=(0.12+0.09*Math.sin(_t/3)).toFixed(2);R(c,"rgba(120,210,255,"+gp+")",106,49,37,1);R(c,"rgba(120,210,255,"+gp+")",106,69,37,1);R(c,"rgba(120,210,255,"+gp+")",106,49,1,21);R(c,"rgba(120,210,255,"+gp+")",142,49,1,21); // brillo del monitor
   // planta
   R(c,OL,147,92,12,14);R(c,"#b5583f",148,93,10,12);R(c,"#d9775a",148,93,10,2);disc(c,153,84,7,"#1f4a24");disc(c,153,84,6,"#3f8a3a");var pw=Math.round(Math.sin((o.t||0)/6));disc(c,151+pw,81,3,"#5fae4d"); // hoja que se mece
+  // alguien caminando por el cuarto (fondo)
+  if(!(typeof CFG!=="undefined"&&CFG.rm))bgWalker(c,r.npc.seed*3+17,_t,74,0.78);
   // personaje
   var nx=o.big?92:70,ny=48;
   disc(c,nx+16,ny+33,9,"rgba(0,0,0,.25)",.3);
@@ -865,6 +873,7 @@ function drawFiller(c,a,o){
   else{var _t=o.t||0;for(var r2=0;r2<3;r2++){var rx=52+r2*34;R(c,OL,rx,10,28,80);R(c,"#2a2f45",rx+1,11,26,78);for(var u=0;u<9;u++){R(c,"#3b4250",rx+3,14+u*8,22,6);
     R(c,((hash(u,r2+f)+(_t>>1))%4)?"#4ade80":"#173a26",rx+5,16+u*8,2,2);          // LED que parpadea
     R(c,((_t+u+r2)%3)?"#173a4a":"#5eead4",rx+9,16+u*8,2,2)}}}                       // LED de actividad
+  if(!(typeof CFG!=="undefined"&&CFG.rm))bgWalker(c,w*17+f*5+9,o.t||0,74,0.78); // alguien caminando
 }
 function drawAuditorium(c,w,o){
   o=o||{};var W=160,i;
